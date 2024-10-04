@@ -10,8 +10,6 @@ import environment from "../../../env/env";
             isGlobal: true
         }),
         ExampleModule
-    ],
-    controllers: [],
-    providers: []
+    ]
 })
 export class RootModule {}

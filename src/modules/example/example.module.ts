@@ -1,10 +1,7 @@
 import { Module } from "@nestjs/common";
-import { ExampleController } from "./example.controller";
-import { ExampleService } from "./example.service";
+import { HelloWorldModule } from "./endpoints/hello-world/hello-world.module";
 
 @Module({
-    imports: [],
-    controllers: [ExampleController],
-    providers: [ExampleService]
+    imports: [HelloWorldModule]
 })
 export class ExampleModule {}

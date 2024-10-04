@@ -10,3 +10,4 @@ Aethon Holdings Nestjs REST API boilerplate
 2. Prettier
 3. Jest
 4. nestjs/config and related scripts
+5. Swagger

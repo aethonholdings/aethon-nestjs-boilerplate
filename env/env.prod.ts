@@ -1,3 +1,7 @@
 export default () => ({
-    dev: false
+    dev: false,
+    port: 3000,
+    api: {
+        version: "0.1"
+    }
 });
