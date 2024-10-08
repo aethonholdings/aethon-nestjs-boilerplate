@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { HelloWorldDTOGet } from "../../dto/hello-world.get.dto";
+import { HelloWorldDTOGet } from "../../../../common/dto/hello-world/hello-world.get.dto";
 
 @Injectable()
 export class HelloWorldService {

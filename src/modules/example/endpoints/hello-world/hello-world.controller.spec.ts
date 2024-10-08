@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { HelloWorldController } from "./hello-world.controller";
 import { HelloWorldService } from "./hello-world.service";
 import { ConfigService } from "@nestjs/config";
-import { helloResponse } from "./hello-world.test-data";
+import { helloResponse } from "../../../../common/test-data/hello-world/hello-world.test-data";
 
 describe("Hello World Controller", () => {
     let appController: HelloWorldController;
