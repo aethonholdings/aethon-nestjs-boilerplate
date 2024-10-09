@@ -65,7 +65,7 @@ describe("UserController", () => {
                 return await controller.create(user);
             })
         );
-        await controller.findAll().then((result) => {
+        await controller.findAll({ path: "test" }).then((result) => {
             expect(result).toBeDefined();
             expect(result.data).toBeDefined();
             expect(result.data.length).toEqual(testData.length);
