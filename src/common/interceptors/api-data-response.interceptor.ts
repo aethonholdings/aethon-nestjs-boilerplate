@@ -1,6 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { map, Observable } from "rxjs";
 import { APIResponse } from "../types/types";
+import { Paginated } from "nestjs-paginate";
 
 @Injectable()
 export class APIDataResponseInterceptor implements NestInterceptor {
@@ -13,16 +14,12 @@ export class APIDataResponseInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         map((data: any) => {
-            const payload: boolean = (data!==null);
-            const paginated: boolean = false; // PLACEHOLDER
-            const endTime = Date.now();
-            const elapsedTime = endTime - startTime;
             return {
                 success: true,
                 url: url,
                 requestMethod: request.method,
-                paginated: payload ? paginated : undefined,
-                elapsedTime: elapsedTime,
+                paginated: data instanceof Paginated,
+                elapsedTime: Date.now() - startTime,
                 payload: data  
             }
         }),

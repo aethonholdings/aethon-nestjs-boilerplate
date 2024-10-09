@@ -1,16 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Post, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Req } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserGetDTO } from "src/common/dto/user/user.get.dto";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserUpdateDTO } from "src/common/dto/user/user.update.dto";
+import { Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
+import { paginateQuery } from "src/common/utils/paginate-query.utils";
 
-@Controller("user")
+const path = "user";
+
+@Controller(path)
 export class UserController {
     constructor(private userService: UserService) {}
-    
+
     @Get()
-    findAll(): Promise<UserGetDTO[]> {
-        return this.userService.findAll();
+    findAll(@Paginate() query?: PaginateQuery): Promise<Paginated<UserGetDTO>> {
+        return this.userService.findAll(paginateQuery(query, path));
     }
 
     @Get(":id")
@@ -30,6 +34,8 @@ export class UserController {
 
     @Delete(":id")
     delete(@Param("id") id: number): Promise<null> {
-        return this.userService.delete(id).then(() => { return null });
+        return this.userService.delete(id).then(() => {
+            return null;
+        });
     }
 }

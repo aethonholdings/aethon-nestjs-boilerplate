@@ -1,33 +1,47 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserGetDTO } from "src/common/dto/user/user.get.dto";
 import { UserUpdateDTO } from "src/common/dto/user/user.update.dto";
 import { User } from "src/common/entities/user.entity";
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
-    userRepository = this.dataSource.getRepository(User);
+    private _userRepository: Repository<User>;
 
-    constructor(private dataSource: DataSource) {}
+    private _paginateConfig: PaginateConfig<User> = {
+        sortableColumns: ["id"],
+        defaultSortBy: [["id", "ASC"]]
+    };
 
-    async findAll(): Promise<UserGetDTO[]> {
-        return this.userRepository.find();
+    constructor(private readonly dataSource: DataSource) {
+        this._userRepository = this.dataSource.getRepository(User);
+    }
+
+    async findAll(query: PaginateQuery): Promise<Paginated<UserGetDTO>> {
+        return paginate(query, this._userRepository, this._paginateConfig).catch((error) => {
+            throw new HttpException(error.message || "Not found", HttpStatus.NOT_FOUND);
+        });
     }
 
     async findOne(id: number): Promise<UserGetDTO> {
-        return this.userRepository.findOneOrFail({ where: { id: id } });
+        return this._userRepository.findOneOrFail({ where: { id: id } }).catch((error) => {
+            throw new HttpException(error.message || "Not found", HttpStatus.NOT_FOUND);
+        });
     }
 
     async create(userCreateDTO: UserCreateDTO): Promise<UserGetDTO> {
-        return this.userRepository.save(userCreateDTO);
+        return this._userRepository.save(userCreateDTO);
     }
 
     async update(id: number, userUpdateDTO: UserUpdateDTO): Promise<UserGetDTO> {
-        return this.userRepository.save(userUpdateDTO);
+        return this._userRepository.save(userUpdateDTO);
     }
 
     async delete(id: number): Promise<Boolean> {
-        return this.userRepository.delete(id).then((result) => { return result.affected > 0 });
+        return this._userRepository.delete(id).then((result) => {
+            return result.affected > 0;
+        });
     }
 }

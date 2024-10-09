@@ -67,7 +67,8 @@ describe("UserController", () => {
         );
         await controller.findAll().then((result) => {
             expect(result).toBeDefined();
-            expect(result.length).toEqual(testData.length);
+            expect(result.data).toBeDefined();
+            expect(result.data.length).toEqual(testData.length);
             return result;
         });
     });
