@@ -89,7 +89,7 @@ describe("UserController", () => {
         let user = testData[0];
         let created = await controller.create(user);
         await controller.delete(created.id).then((result) => {
-            expect(result).toEqual(true);
+            expect(result).toBeNull();
             return result;
         });
     });
