@@ -1,6 +1,9 @@
 export default () => ({
-    dev: true,
-    port: 3000,
+    root: {
+        dev: true,
+        port: 3000,
+        logger: ["fatal", "error", "warn", "log", "debug"]
+    },
     api: {
         version: "0.1"
     },

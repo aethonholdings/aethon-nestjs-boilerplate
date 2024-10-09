@@ -1,15 +1,18 @@
 import { NestFactory } from "@nestjs/core";
 import { RootModule } from "./modules/root/root.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import environment from "../env/env";
 import { APIDataResponseInterceptor } from "./common/interceptors/api-data-response.interceptor";
-import { APIErrorResponseFilter } from "./common/filters/api-error-response.filter";
+import environment from "../env/env";
 
 async function bootstrap() {
-    // create the root module
-    // enable CORS for dev environment
-    const env = environment();
-    const options: any = env.dev ? { cors: true } : {};
+    
+    // set up the root app environment
+    const env = environment(); // import the environment data structure
+    const options: any = {};
+    (env.root?.dev) ? options.cors = true : null; // enable CORS for dev environment
+    (env.root?.logger) ? options.logger = env.root.logger : null; // set up logger levels
+
+    // create the app
     const app = await NestFactory.create(RootModule, options);
 
     // set up Swagger
@@ -24,10 +27,7 @@ async function bootstrap() {
     // set up global interceptors
     app.useGlobalInterceptors(new APIDataResponseInterceptor());
 
-    // set up global filters
-    app.useGlobalFilters(new APIErrorResponseFilter());
-
     // start the server
-    await app.listen(env.port);
+    await app.listen(env.root.port);
 }
 bootstrap();

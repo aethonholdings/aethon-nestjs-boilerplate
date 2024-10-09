@@ -4,7 +4,7 @@
 
 Aethon Holdings Nestjs REST API boilerplate
 
-## Included
+## Dependencies/ extensions included
 
 1. NestJS core X
 2. Prettier X
@@ -13,9 +13,16 @@ Aethon Holdings Nestjs REST API boilerplate
 5. TypeORM + mySQL X
 6. Response packaging X
 7. Paginate X
-8. Logging
+8. Logging X
 9. Error handling
 10. Swagger
 11. Validation
+
+## API response schema
+
+### Error
+
+### Response
+
 
 

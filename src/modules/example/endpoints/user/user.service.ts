@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserGetDTO } from "src/common/dto/user/user.get.dto";
@@ -8,7 +8,7 @@ import { DataSource, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
-    private _userRepository: Repository<User>;
+    private readonly _userRepository: Repository<User>;
 
     private _paginateConfig: PaginateConfig<User> = {
         sortableColumns: ["id"],
