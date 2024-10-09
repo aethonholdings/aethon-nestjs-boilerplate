@@ -1,5 +1,7 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, RequestMethod } from "@nestjs/common";
 import { Request, Response } from "express";
+import { APIResponse } from "../types/types";
+import * as request from 'supertest';
 
 @Catch()
 export class APIErrorResponseFilter implements ExceptionFilter {
@@ -7,16 +9,18 @@ export class APIErrorResponseFilter implements ExceptionFilter {
         const context = host.switchToHttp();
         const request: Request = context.getRequest<Request>();
         const url: string = `${request.protocol}://${request.get("Host")}${request.originalUrl}`;
-        const status: number = exception instanceof HttpException ? exception.getStatus() : 500;
+        const status: string = exception instanceof HttpException ? exception.getStatus().toString() : "500";
         const message: string = exception?.message ? JSON.stringify(exception.message) : "Internal Server Error";
+        console.log(RequestMethod[request.method as keyof typeof RequestMethod]);
 
         context.getResponse<Response>().json({
             success: false,
             url: url,
+            requestMethod: request.method,
             error: {
                 status: status,
                 message: message
             }
-        });
+        } as APIResponse<any>);
     }
 }
