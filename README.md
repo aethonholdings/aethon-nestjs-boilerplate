@@ -11,9 +11,11 @@ Aethon Holdings Nestjs REST API boilerplate
 3. Jest X
 4. nestjs/config and related scripts X
 5. Swagger X
-6. TypeORM + mySQL 
-7. Logging
-8. Error handling
-9. Validation
-10. Paginate
+6. TypeORM + mySQL X
+7. Response packaging
+8. Paginate
+9. Logging
+10. Error handling
+11. Validation
+
 
