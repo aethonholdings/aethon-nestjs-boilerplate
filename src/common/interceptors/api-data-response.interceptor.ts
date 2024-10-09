@@ -23,7 +23,7 @@ export class APIDataResponseInterceptor implements NestInterceptor {
                 requestMethod: request.method,
                 paginated: payload ? paginated : undefined,
                 elapsedTime: elapsedTime,
-                data: payload ? data : undefined  
+                payload: data  
             }
         }),
       );

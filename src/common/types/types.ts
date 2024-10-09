@@ -10,12 +10,12 @@ interface APIResponseError extends APIResponseMeta {
 
 interface APIResponseData<T> extends APIResponseSuccess {
     paginated: false;
-    data?: T;
+    payload: T;
 }
 
 interface APIResponsePaginatedData<T> extends APIResponseSuccess {
     paginated: true;
-    data: Paginated<T>;
+    payload: Paginated<T>;
 }
 
 interface APIResponseSuccess extends APIResponseMeta {
