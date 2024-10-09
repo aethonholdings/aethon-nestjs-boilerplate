@@ -41,7 +41,10 @@ export class UserService {
 
     async delete(id: number): Promise<Boolean> {
         return this._userRepository.delete(id).then((result) => {
-            return result.affected > 0;
+            if (result.affected > 0) {
+                return true;
+            }
+            throw new HttpException("Not found", HttpStatus.NOT_FOUND);
         });
     }
 }
