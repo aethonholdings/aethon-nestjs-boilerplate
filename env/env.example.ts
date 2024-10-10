@@ -6,7 +6,9 @@ export default () => ({
     api: {
         version: "0.1",
         title: "Aethon NestJS boilerplate",
-        description: "The Aethon NestJS boilerplate API"
+        description: "The Aethon NestJS boilerplate API",
+        path: "api",
+        jsonPath: "json"
     },
     db: {
         type: "mysql",

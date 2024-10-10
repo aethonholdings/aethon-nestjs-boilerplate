@@ -8,12 +8,11 @@ import { LoggingInterceptor } from "./common/interceptors/logging/logging.interc
 import environment from "../env/env";
 
 async function bootstrap() {
-    
     // set up the root app environment
     const env = environment(); // import the environment data structure
     const options: any = {};
-    (env.root?.dev) ? options.cors = true : null; // enable CORS for dev environment
-    (env?.logger) ? options.logger = env.logger : null; // set up logger levels
+    env.root?.dev ? (options.cors = true) : null; // enable CORS for dev environment
+    env?.logger ? (options.logger = env.logger) : null; // set up logger levels
 
     // create the app
     const app = await NestFactory.create(RootModule, options);
@@ -25,7 +24,7 @@ async function bootstrap() {
         .setVersion(env.api.version)
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api", app, document, { useGlobalPrefix: true, jsonDocumentUrl: "json" });
+    SwaggerModule.setup(env.api.path, app, document, { useGlobalPrefix: true, jsonDocumentUrl: env.api.jsonPath });
 
     // set up global interceptors
     app.useGlobalInterceptors(new APIDataResponseInterceptor());
