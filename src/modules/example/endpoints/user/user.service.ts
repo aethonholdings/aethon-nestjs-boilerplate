@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserGetDTO } from "src/common/dto/user/user.get.dto";
 import { UserUpdateDTO } from "src/common/dto/user/user.update.dto";
 import { User } from "src/common/entities/user.entity";
+import { ErrorHandlers } from "src/common/utils/error-handlers";
 import { DataSource, Repository } from "typeorm";
 
 @Injectable()
@@ -20,15 +21,11 @@ export class UserService {
     }
 
     async findAll(query: PaginateQuery): Promise<Paginated<UserGetDTO>> {
-        return paginate(query, this._userRepository, this._paginateConfig).catch((error) => {
-            throw new HttpException(error.message || "Not found", HttpStatus.NOT_FOUND);
-        });
+        return paginate(query, this._userRepository, this._paginateConfig);
     }
 
     async findOne(id: number): Promise<UserGetDTO> {
-        return this._userRepository.findOneOrFail({ where: { id: id } }).catch((error) => {
-            throw new HttpException(error.message || "Not found", HttpStatus.NOT_FOUND);
-        });
+        return this._userRepository.findOneOrFail({ where: { id: id } });
     }
 
     async create(userCreateDTO: UserCreateDTO): Promise<UserGetDTO> {
@@ -40,11 +37,6 @@ export class UserService {
     }
 
     async delete(id: number): Promise<Boolean> {
-        return this._userRepository.delete(id).then((result) => {
-            if (result.affected > 0) {
-                return true;
-            }
-            throw new HttpException("Not found", HttpStatus.NOT_FOUND);
-        });
+        return ErrorHandlers.checkDelete(this._userRepository.delete(id));
     }
 }

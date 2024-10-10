@@ -20,16 +20,15 @@ interface APIResponsePaginatedData<T> extends APIResponseSuccess {
 
 interface APIResponseSuccess extends APIResponseMeta {
     success: true;
-    elapsedTime?: number;
 }
 
 interface APIError {
-    status: string;
+    status: number;
     message: string;
 }
 
 interface APIResponseMeta {
-    url: string;
+    path: string;
     requestMethod: keyof typeof RequestMethod,
     success: boolean;
 }
