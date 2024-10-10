@@ -13,15 +13,15 @@ async function bootstrap() {
     const env = environment(); // import the environment data structure
     const options: any = {};
     (env.root?.dev) ? options.cors = true : null; // enable CORS for dev environment
-    (env.root?.logger) ? options.logger = env.root.logger : null; // set up logger levels
+    (env?.logger) ? options.logger = env.logger : null; // set up logger levels
 
     // create the app
     const app = await NestFactory.create(RootModule, options);
 
     // set up Swagger
     const config = new DocumentBuilder()
-        .setTitle("Aethon NestJS boilerplate")
-        .setDescription("The Aethon NestJS boilerplate API description")
+        .setTitle(env.api.title)
+        .setDescription(env.api.description)
         .setVersion(env.api.version)
         .build();
     const document = SwaggerModule.createDocument(app, config);

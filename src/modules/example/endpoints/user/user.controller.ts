@@ -4,10 +4,12 @@ import { UserGetDTO } from "src/common/dto/user/user.get.dto";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserUpdateDTO } from "src/common/dto/user/user.update.dto";
 import { Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
+import { ApiTags } from "@nestjs/swagger";
 
 const path = "user";
 
 @Controller(path)
+@ApiTags("User")
 export class UserController {
     constructor(private userService: UserService) {}
 
