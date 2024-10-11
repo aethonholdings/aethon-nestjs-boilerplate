@@ -12,7 +12,7 @@ export interface APIResponseError extends APIResponseMeta {
 
 interface APIResponseOneData<T> extends APIResponseSuccess {
     paginated: false;
-    payload: T;
+    payload: T | T[];
 }
 
 interface APIResponsePaginatedData<T> extends APIResponseSuccess {

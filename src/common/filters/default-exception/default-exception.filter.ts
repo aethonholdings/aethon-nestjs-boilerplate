@@ -26,15 +26,15 @@ export class DefaultExceptionFilter implements ExceptionFilter {
                 message = "Bad request";
             }
             exception = new HttpException(message, status);
-        } else
-            response.status(exception.getStatus()).json({
-                success: false,
-                path: request.url,
-                requestMethod: request.method,
-                error: {
-                    status: exception.getStatus(),
-                    message: exception.message
-                }
-            } as APIResponse<any>);
+        }
+        response.status(exception.getStatus()).json({
+            success: false,
+            path: request.url,
+            requestMethod: request.method,
+            error: {
+                status: exception.getStatus(),
+                message: exception.message
+            }
+        } as APIResponse<any>);
     }
 }
