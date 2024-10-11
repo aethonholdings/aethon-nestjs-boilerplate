@@ -15,8 +15,9 @@ Aethon Holdings Nestjs REST API boilerplate
 7. Paginate X
 8. Logging X
 9. Error handling X
-10. Validation
-11. Swagger
+10. Swagger X
+11. Validation
+
 
 ## API response schema
 

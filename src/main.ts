@@ -5,6 +5,7 @@ import { APIResponseInterceptor } from "./common/interceptors/api-response/api-r
 import { DefaultExceptionFilter } from "./common/filters/default-exception/default-exception.filter";
 import { LoggingInterceptor } from "./common/interceptors/logging/logging.interceptor";
 import environment from "../env/env";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
     // set up the root app environment
@@ -31,6 +32,9 @@ async function bootstrap() {
     // set up global interceptors
     app.useGlobalInterceptors(new APIResponseInterceptor());
     app.useGlobalInterceptors(new LoggingInterceptor());
+
+    // attach the validation pipe
+    app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: !env.root.dev }));
 
     // start the server
     await app.listen(env.root.port);

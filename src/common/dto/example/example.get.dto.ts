@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { ExampleInterface } from "src/common/interfaces/example.interface";
 
 export class ExampleGetDTO implements ExampleInterface {
@@ -9,6 +10,7 @@ export class ExampleGetDTO implements ExampleInterface {
         description: "The id of the example class entity.",
         example: 1
     })
+    @IsNumber()
     id: number;
 
     @ApiProperty({
@@ -18,6 +20,8 @@ export class ExampleGetDTO implements ExampleInterface {
         description: "A first name parameter.",
         example: "John"
     })
+    @IsString()
+    @IsNotEmpty()
     firstName: string;
 
     @ApiProperty({
@@ -27,6 +31,8 @@ export class ExampleGetDTO implements ExampleInterface {
         description: "A last name parameter.",
         example: "Doe"
     })
+    @IsString()
+    @IsNotEmpty()
     lastName: string;
 
     @ApiProperty({
@@ -36,5 +42,6 @@ export class ExampleGetDTO implements ExampleInterface {
         description: "Whether the entity is active.",
         example: true
     })
+    @IsBoolean()
     isActive: boolean;
 }
