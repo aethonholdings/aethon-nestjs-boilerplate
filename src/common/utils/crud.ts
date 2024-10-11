@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { DeleteResult, FindOneOptions, Repository, UpdateResult } from "typeorm";
+import env from "env/env";
+
+const dev = env().root.dev;
 
 export namespace crud {
     export function findAll<T>(
@@ -8,27 +11,27 @@ export namespace crud {
         repository: Repository<T>,
         paginateConfig: PaginateConfig<T>
     ): Promise<Paginated<T>> {
-        return paginate(query, repository, paginateConfig).catch(() => {
-            throw error();
+        return paginate(query, repository, paginateConfig).catch((error) => {
+            throw errorFactory(HttpStatus.INTERNAL_SERVER_ERROR, error);
         });
     }
 
     export function findOne<T>(repository: Repository<T>, options: FindOneOptions): Promise<T> {
-        return repository.findOneOrFail(options).catch(() => {
-            throw error(HttpStatus.NOT_FOUND);
+        return repository.findOneOrFail(options).catch((error) => {
+            throw errorFactory(HttpStatus.NOT_FOUND, error);
         });
     }
 
     export function create<T>(repository: Repository<T>, dto: T): Promise<any> {
-        return repository.save(dto).catch(() => {
-            throw error();
+        return repository.save(dto).catch((error) => {
+            throw errorFactory(HttpStatus.INTERNAL_SERVER_ERROR, error);
         });
     }
 
     export function update<T>(id: number, repository: Repository<T>, dto: any): Promise<null> {
         // check if the object submitted has an id that is inconsistent with the id in the URL
         if (dto?.id !== id) {
-            throw error(HttpStatus.BAD_REQUEST);
+            throw errorFactory(HttpStatus.BAD_REQUEST);
         }
         delete dto?.id;
         return repository
@@ -36,8 +39,8 @@ export namespace crud {
             .then((result: UpdateResult) => {
                 return checkIfFound(result);
             })
-            .catch(() => {
-                throw error(HttpStatus.BAD_REQUEST);
+            .catch((error) => {
+                throw errorFactory(HttpStatus.BAD_REQUEST, error);
             });
     }
 
@@ -49,12 +52,18 @@ export namespace crud {
 
     function checkIfFound(result: DeleteResult | UpdateResult): null {
         if (result.affected === 0) {
-            throw error(HttpStatus.NOT_FOUND);
+            throw errorFactory(HttpStatus.NOT_FOUND);
         }
         return null;
     }
 
-    function error(status?: number): HttpException {
+    function errorFactory(
+        status: HttpStatus.BAD_REQUEST | HttpStatus.NOT_FOUND | HttpStatus.INTERNAL_SERVER_ERROR,
+        sourceError?: Error
+    ): Error {
+        if(dev && sourceError) {
+            return sourceError
+        }
         switch (status) {
             case HttpStatus.BAD_REQUEST:
                 return new HttpException("Bad request", HttpStatus.BAD_REQUEST);

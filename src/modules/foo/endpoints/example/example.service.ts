@@ -3,7 +3,7 @@ import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 import { ExampleGetDTO } from "src/common/dto/example/example.get.dto";
 import { ExampleUpdateDTO } from "src/common/dto/example/example.update.dto";
-import { Example } from "src/common/entities/example.entity";
+import { Example } from "src/common/database/entities/example.entity";
 import { DataSource, Repository } from "typeorm";
 import { crud } from "../../../../common/utils/crud";
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ExampleController } from "./example.controller";
-import { Example } from "src/common/entities/example.entity";
+import { Example } from "src/common/database/entities/example.entity";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { userTestData } from "src/common/test-data/user/user.test-data";
 import { ExampleService } from "./example.service";
@@ -12,7 +12,7 @@ describe("UserController", () => {
     let dbOptions = {
         type: "sqlite",
         database: ":memory:",
-        entities: ["src/common/entities/*.entity.ts"],
+        entities: ["src/common/database/entities/*.entity.ts"],
         synchronize: true,
         dropSchema: true,
         logging: false,

@@ -5,7 +5,7 @@ import environment from "../../../env/env";
 @Module({
     imports: [TypeOrmModule.forRoot({
         ...environment().db,
-        entities: [__dirname  + "./entities/**/*.entity{.ts,.js}"],
+        entities: [__dirname  + "/**/*.entity{.ts,.js}"],
     } as TypeOrmModuleOptions)]
     
 })
