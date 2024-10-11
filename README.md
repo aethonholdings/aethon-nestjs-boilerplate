@@ -47,7 +47,7 @@ export interface APIResponseData<T> {
 ### Error
 ```
 export interface APIResponseError {
-  success: boolean = false                      // false for true
+  success: boolean = false                      // false for error
   path: string                                  // the endpoint path
   requestMethod: keyof typeof RequestMethod     // 'GET' | 'POST' | 'PUT' etc.
   error: {
