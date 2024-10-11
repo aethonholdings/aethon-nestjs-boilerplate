@@ -6,7 +6,7 @@ import { Request } from "express";
 
 // Interceptor that wraps the response data in a standard APIResponse object
 @Injectable()
-export class APIDataResponseInterceptor implements NestInterceptor {
+export class APIResponseInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<APIResponse<any>> {
         const request: Request = context.switchToHttp().getRequest();
         return next.handle().pipe(
