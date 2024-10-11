@@ -5,7 +5,7 @@ import { ExampleGetDTO } from "src/common/dto/example/example.get.dto";
 import { ExampleUpdateDTO } from "src/common/dto/example/example.update.dto";
 import { Example } from "src/common/database/entities/example.entity";
 import { DataSource, Repository } from "typeorm";
-import { crud } from "../../../../common/utils/crud";
+import * as crud from "../../../../common/utils/crud";
 
 export const paginateConfig: PaginateConfig<Example> = {
     sortableColumns: ["id"],
@@ -21,7 +21,9 @@ export class ExampleService {
         this._exampleRepository = this.dataSource.getRepository(Example);
     }
 
-    getPaginateConfig(): PaginateConfig<Example> { return this._paginateConfig; }
+    getPaginateConfig(): PaginateConfig<Example> {
+        return this._paginateConfig;
+    }
 
     async findAll(query: PaginateQuery): Promise<Paginated<ExampleGetDTO>> {
         return crud.findAll(query, this._exampleRepository, this._paginateConfig);

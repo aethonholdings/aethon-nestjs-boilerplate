@@ -1,9 +1,9 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger, Query } from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import { EntityNotFoundError, QueryFailedError, TypeORMError } from "typeorm";
 
 // filter handling TypeORM errors, converting them to the desired HTTP status code
 @Catch(TypeORMError)
-export class TypeOrmExceptionFilter<T> implements ExceptionFilter {
+export class TypeOrmExceptionFilter implements ExceptionFilter {
     private readonly _logger = new Logger(TypeOrmExceptionFilter.name);
 
     catch(exception: TypeORMError, host: ArgumentsHost) {

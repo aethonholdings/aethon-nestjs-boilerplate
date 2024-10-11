@@ -31,6 +31,6 @@ interface APIError {
 
 interface APIResponseMeta {
     path: string;
-    requestMethod: keyof typeof RequestMethod,
+    requestMethod: keyof typeof RequestMethod;
     success: boolean;
 }

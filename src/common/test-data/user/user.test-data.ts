@@ -16,4 +16,4 @@ export const userTestData: ExampleCreateDTO[] = [
         lastName: "Smith",
         isActive: true
     }
-]
+];

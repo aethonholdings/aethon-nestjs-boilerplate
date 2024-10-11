@@ -29,7 +29,6 @@ async function bootstrap() {
     app.useGlobalInterceptors(new APIDataResponseInterceptor());
     app.useGlobalInterceptors(new LoggingInterceptor());
 
-    
     // set up exception filters
     app.useGlobalFilters(new TypeOrmExceptionFilter());
 

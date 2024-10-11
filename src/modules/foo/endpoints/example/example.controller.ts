@@ -22,29 +22,54 @@ export class ExampleController {
     }
 
     @Get(":id")
-    @ApiParam({ name: "id", type: Number, required: true, description: "The id of the example class entity to be fetched." })
+    @ApiParam({
+        name: "id",
+        type: Number,
+        required: true,
+        description: "The id of the example class entity to be fetched."
+    })
     @ApiOkResponse({ type: ExampleGetDTO, description: "Returns a single example class entity base on their id." })
     findOne(@Param("id") id: number): Promise<ExampleGetDTO> {
         return this.exampleService.findOne(id);
     }
 
     @Post()
-    @ApiParam({ name: "userCreateDTO", type: ExampleCreateDTO, required: true, description: "The data to create a new example class entity." })
+    @ApiParam({
+        name: "userCreateDTO",
+        type: ExampleCreateDTO,
+        required: true,
+        description: "The data to create a new example class entity."
+    })
     @ApiOkResponse({ type: ExampleGetDTO, description: "Creates and returns a new example class entity." })
     create(@Body() userCreateDTO: ExampleCreateDTO): Promise<ExampleGetDTO> {
         return this.exampleService.create(userCreateDTO);
     }
 
     @Put(":id")
-    @ApiParam({ name: "id", type: "number", required: true, description: "The id of the example class entity to be updated." })
-    @ApiParam({ name: "userUpdateDTO", type: ExampleUpdateDTO, required: true, description: "The data to update an existing example class entity." })
+    @ApiParam({
+        name: "id",
+        type: "number",
+        required: true,
+        description: "The id of the example class entity to be updated."
+    })
+    @ApiParam({
+        name: "userUpdateDTO",
+        type: ExampleUpdateDTO,
+        required: true,
+        description: "The data to update an existing example class entity."
+    })
     @ApiOkResponse({ type: null, description: "Updates an existing example class entity." })
     update(@Param("id") id: number, userUpdateDTO: ExampleUpdateDTO): Promise<null> {
         return this.exampleService.update(id, userUpdateDTO);
     }
 
     @Delete(":id")
-    @ApiParam({ name: "id", type: "number", required: true, description: "The id of the example class entity to be deleted." })
+    @ApiParam({
+        name: "id",
+        type: "number",
+        required: true,
+        description: "The id of the example class entity to be deleted."
+    })
     @ApiOkResponse({ type: null, description: "Deletes an existing example class entity." })
     delete(@Param("id") id: number): Promise<null> {
         return this.exampleService.delete(id);

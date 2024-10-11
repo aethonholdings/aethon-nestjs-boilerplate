@@ -9,7 +9,7 @@ import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 
 describe("UserController", () => {
     let controller: ExampleController;
-    let dbOptions = {
+    const dbOptions = {
         type: "sqlite",
         database: ":memory:",
         entities: ["src/common/database/entities/*.entity.ts"],
@@ -37,7 +37,7 @@ describe("UserController", () => {
     });
 
     it("should create", async () => {
-        let user = JSON.parse(JSON.stringify(testData[0]));
+        const user = JSON.parse(JSON.stringify(testData[0]));
         await controller.create(user).then((result) => {
             expect(result).toBeDefined();
             expect(result.firstName).toEqual(user.firstName);
@@ -48,8 +48,8 @@ describe("UserController", () => {
     });
 
     it("should find one", async () => {
-        let user = JSON.parse(JSON.stringify(testData[0]));
-        let created = await controller.create(user);
+        const user = JSON.parse(JSON.stringify(testData[0]));
+        const created = await controller.create(user);
         await controller.findOne(created.id).then((result) => {
             expect(result).toBeDefined();
             expect(result.firstName).toEqual(user.firstName);
@@ -74,9 +74,9 @@ describe("UserController", () => {
     });
 
     it("should update", async () => {
-        let user = JSON.parse(JSON.stringify(testData[0]));
-        let updatedUser = { ...user, firstName: "Updated" };
-        let created = await controller.create(user);
+        const user = JSON.parse(JSON.stringify(testData[0]));
+        const updatedUser = { ...user, firstName: "Updated" };
+        const created = await controller.create(user);
         await controller.update(created.id, updatedUser).then((result) => {
             expect(result).toBeNull();
             return result;
@@ -84,8 +84,8 @@ describe("UserController", () => {
     });
 
     it("should delete", async () => {
-        let user = testData[0];
-        let created = await controller.create(user);
+        const user = testData[0];
+        const created = await controller.create(user);
         await controller.delete(created.id).then((result) => {
             expect(result).toBeNull();
             return result;
