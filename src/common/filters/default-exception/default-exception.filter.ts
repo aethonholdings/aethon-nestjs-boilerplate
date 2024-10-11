@@ -3,15 +3,11 @@ import { EntityNotFoundError, QueryFailedError } from "typeorm";
 import { Response, Request } from "express";
 import { APIResponse } from "src/common/types/types";
 import { HttpArgumentsHost } from "@nestjs/common/interfaces";
-import env from "env/env";
 
 // filter handling unhandled errors, converting them to the desired HTTP status code
 @Catch()
 export class DefaultExceptionFilter implements ExceptionFilter {
-    private _dev = env().root.dev;
     private readonly _logger = new Logger(DefaultExceptionFilter.name);
-
-    constructor() {}
 
     catch(exception: any, host: ArgumentsHost) {
         const httpHost: HttpArgumentsHost = host.switchToHttp();
