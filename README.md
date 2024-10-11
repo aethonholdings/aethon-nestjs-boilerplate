@@ -51,7 +51,7 @@ export interface APIResponseError {
   path: string                                  // the endpoint path
   requestMethod: keyof typeof RequestMethod     // 'GET' | 'POST' | 'PUT' etc.
   error: {
-    status: number                              // HTTP response code
+    status: number                              // HTTP error code
     message: string                             // error message
   }
 }
