@@ -1,6 +1,6 @@
 import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 
-export const userTestData: ExampleCreateDTO[] = [
+export const exampleTestData: ExampleCreateDTO[] = [
     {
         firstName: "John",
         lastName: "Doe",

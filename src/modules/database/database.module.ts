@@ -7,7 +7,7 @@ import { DatabaseService } from "./services/database.service";
     imports: [
         TypeOrmModule.forRoot({
             ...environment().db,
-            entities: [__dirname + "/../../common/entities/*.entity{.ts,.js}"]
+            entities: [__dirname + "/../../common/entities/**/*.entity{.ts,.js}"]
         } as TypeOrmModuleOptions)
     ],
     providers: [DatabaseService]

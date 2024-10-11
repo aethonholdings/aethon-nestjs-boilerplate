@@ -1,4 +1,4 @@
-import { LoggingInterceptor } from "../../../src/common/interceptors/logging/logging.interceptor";
+import { LoggingInterceptor } from "src/common/interceptors/logging/logging.interceptor";
 
 describe("LoggingInterceptor", () => {
     it("should be defined", () => {

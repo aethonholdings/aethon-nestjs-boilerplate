@@ -1,4 +1,4 @@
-import { DefaultExceptionFilter } from "./default-exception.filter";
+import { DefaultExceptionFilter } from "src/common/filters/default-exception/default-exception.filter";
 
 describe("DefaultExceptionFilter", () => {
     it("should be defined", () => {
