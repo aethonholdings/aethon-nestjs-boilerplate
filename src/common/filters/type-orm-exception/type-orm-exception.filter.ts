@@ -16,6 +16,7 @@ export class TypeOrmExceptionFilter<T> implements ExceptionFilter {
         const httpArguments: HttpArgumentsHost = host.switchToHttp();
         const response: Response = httpArguments.getResponse();
 
+        console.log(exception);
         if(exception instanceof EntityNotFoundError) {
             status = HttpStatus.NOT_FOUND;
             message = "Resource Not Found";

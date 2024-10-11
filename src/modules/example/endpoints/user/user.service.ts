@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
+import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
 import { UserGetDTO } from "src/common/dto/user/user.get.dto";
 import { UserUpdateDTO } from "src/common/dto/user/user.update.dto";
 import { User } from "src/common/entities/user.entity";
-import { ErrorHandlers } from "src/common/utils/error-handlers";
 import { DataSource, Repository } from "typeorm";
+import { crud } from "../../../../common/utils/crud";
 
 @Injectable()
 export class UserService {
@@ -21,22 +21,22 @@ export class UserService {
     }
 
     async findAll(query: PaginateQuery): Promise<Paginated<UserGetDTO>> {
-        return paginate(query, this._userRepository, this._paginateConfig);
+        return crud.findAll(query, this._userRepository, this._paginateConfig);
     }
 
     async findOne(id: number): Promise<UserGetDTO> {
-        return this._userRepository.findOneOrFail({ where: { id: id } });
+        return crud.findOne(this._userRepository, { where: { id: id } });
     }
 
     async create(userCreateDTO: UserCreateDTO): Promise<UserGetDTO> {
-        return this._userRepository.save(userCreateDTO);
+        return crud.create(this._userRepository, userCreateDTO);
     }
 
-    async update(id: number, userUpdateDTO: UserUpdateDTO): Promise<UserGetDTO> {
-        return this._userRepository.save(userUpdateDTO);
+    async update(id: number, userUpdateDTO: UserUpdateDTO): Promise<null> {
+        return crud.update(id, this._userRepository, userUpdateDTO);
     }
 
-    async delete(id: number): Promise<Boolean> {
-        return ErrorHandlers.checkDelete(this._userRepository.delete(id));
+    async delete(id: number): Promise<null> {
+        return crud.del(id, this._userRepository);
     }
 }

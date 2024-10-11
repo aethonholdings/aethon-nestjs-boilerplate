@@ -29,14 +29,12 @@ export class UserController {
     }
 
     @Post(":id")
-    update(@Param("id") id: number, userUpdateDTO: UserUpdateDTO): Promise<UserGetDTO> {
-        return this.userService.update(id, userUpdateDTO);
+    update(@Param("id") id: number, userUpdateDTO: UserUpdateDTO): Promise<null> {
+        return this.userService.update(id, userUpdateDTO).then(() => null);
     }
 
     @Delete(":id")
     delete(@Param("id") id: number): Promise<null> {
-        return this.userService.delete(id).then(() => {
-            return null;
-        });
+        return this.userService.delete(id).then(() => null);
     }
 }

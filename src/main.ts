@@ -27,9 +27,9 @@ async function bootstrap() {
     SwaggerModule.setup(env.api.path, app, document, { useGlobalPrefix: true, jsonDocumentUrl: env.api.jsonPath });
 
     // set up global interceptors
-    app.useGlobalInterceptors(new APIDataResponseInterceptor());
     app.useGlobalInterceptors(new LoggingInterceptor());
-
+    app.useGlobalInterceptors(new APIDataResponseInterceptor());
+    
     // set up exception filters
     app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalFilters(new TypeOrmExceptionFilter());
