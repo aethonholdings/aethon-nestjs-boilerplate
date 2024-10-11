@@ -1,14 +1,16 @@
 import { RequestMethod } from "@nestjs/common";
 import { Paginated } from "nestjs-paginate";
 
-export type APIResponse<T> = APIResponseError | APIResponseData<T> | APIResponsePaginatedData<T>;
+export type APIResponse<T> = APIResponseData<T> | APIResponseError;
 
-interface APIResponseError extends APIResponseMeta {
+export type APIResponseData<T> = APIResponseOneData<T> | APIResponsePaginatedData<T>;
+
+export interface APIResponseError extends APIResponseMeta {
     success: false;
     error: APIError;
 }
 
-interface APIResponseData<T> extends APIResponseSuccess {
+interface APIResponseOneData<T> extends APIResponseSuccess {
     paginated: false;
     payload: T;
 }

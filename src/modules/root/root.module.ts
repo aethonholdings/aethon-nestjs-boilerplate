@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ExampleModule } from "../example/example.module";
+import { FooModule } from "../foo/foo.module";
 import { ConfigModule } from "@nestjs/config";
 import environment from "../../../env/env";
 import { DatabaseModule } from "src/common/database/database.module";
@@ -11,7 +11,7 @@ import { DatabaseModule } from "src/common/database/database.module";
             isGlobal: true
         }),
         DatabaseModule,
-        ExampleModule
+        FooModule
     ]
 })
 export class RootModule {}

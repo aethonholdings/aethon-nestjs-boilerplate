@@ -1,14 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { UserController } from "./user.controller";
-import { User } from "src/common/entities/user.entity";
+import { ExampleController } from "./example.controller";
+import { Example } from "src/common/entities/example.entity";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { userTestData } from "src/common/test-data/user/user.test-data";
-import { UserService } from "./user.service";
+import { ExampleService } from "./example.service";
 import { DataSource } from "typeorm";
-import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
+import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 
 describe("UserController", () => {
-    let controller: UserController;
+    let controller: ExampleController;
     let dbOptions = {
         type: "sqlite",
         database: ":memory:",
@@ -19,15 +19,15 @@ describe("UserController", () => {
         keepConnectionAlive: true
     } as TypeOrmModuleOptions;
     let dataSource: DataSource;
-    let testData: UserCreateDTO[];
+    let testData: ExampleCreateDTO[];
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [TypeOrmModule.forRoot(dbOptions), TypeOrmModule.forFeature([User])],
-            controllers: [UserController],
-            providers: [UserService]
+            imports: [TypeOrmModule.forRoot(dbOptions), TypeOrmModule.forFeature([Example])],
+            controllers: [ExampleController],
+            providers: [ExampleService]
         }).compile();
-        controller = module.get<UserController>(UserController);
+        controller = module.get<ExampleController>(ExampleController);
         dataSource = module.get<DataSource>(DataSource);
         testData = userTestData;
     });
@@ -36,7 +36,7 @@ describe("UserController", () => {
         expect(controller).toBeDefined();
     });
 
-    it("Should create", async () => {
+    it("should create", async () => {
         let user = JSON.parse(JSON.stringify(testData[0]));
         await controller.create(user).then((result) => {
             expect(result).toBeDefined();
@@ -47,7 +47,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Should find one", async () => {
+    it("should find one", async () => {
         let user = JSON.parse(JSON.stringify(testData[0]));
         let created = await controller.create(user);
         await controller.findOne(created.id).then((result) => {
@@ -59,7 +59,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Should find all", async () => {
+    it("should find all", async () => {
         await Promise.all(
             testData.map(async (user) => {
                 return await controller.create(user);
@@ -73,7 +73,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Should update", async () => {
+    it("should update", async () => {
         let user = JSON.parse(JSON.stringify(testData[0]));
         let updatedUser = { ...user, firstName: "Updated" };
         let created = await controller.create(user);
@@ -83,7 +83,7 @@ describe("UserController", () => {
         });
     });
 
-    it("Should delete", async () => {
+    it("should delete", async () => {
         let user = testData[0];
         let created = await controller.create(user);
         await controller.delete(created.id).then((result) => {

@@ -1,0 +1,17 @@
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ExampleInterface } from "../../interfaces/example.interface";
+
+@Entity()
+export class User implements ExampleInterface {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    firstName: string;
+
+    @Column()
+    lastName: string;
+
+    @Column({ default: true })
+    isActive: boolean;
+}

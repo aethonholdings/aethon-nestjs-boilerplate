@@ -1,6 +1,6 @@
-import { UserCreateDTO } from "src/common/dto/user/user.create.dto";
+import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 
-export const userTestData: UserCreateDTO[] = [
+export const userTestData: ExampleCreateDTO[] = [
     {
         firstName: "John",
         lastName: "Doe",
