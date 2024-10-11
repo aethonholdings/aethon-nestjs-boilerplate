@@ -1,18 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { ExampleController } from "./example.controller";
-import { Example } from "src/common/database/entities/example.entity";
+import { Example } from "src/common/entities/example.entity";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { userTestData } from "src/common/test-data/user/user.test-data";
 import { ExampleService } from "./example.service";
 import { DataSource } from "typeorm";
 import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
+import { DatabaseService } from "src/modules/database/services/database/database.service";
 
 describe("UserController", () => {
     let controller: ExampleController;
     const dbOptions = {
         type: "sqlite",
         database: ":memory:",
-        entities: ["src/common/database/entities/*.entity.ts"],
+        entities: ["src/common/entities/*.entity.ts"],
         synchronize: true,
         dropSchema: true,
         logging: false,
@@ -25,7 +26,7 @@ describe("UserController", () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [TypeOrmModule.forRoot(dbOptions), TypeOrmModule.forFeature([Example])],
             controllers: [ExampleController],
-            providers: [ExampleService]
+            providers: [ExampleService, DatabaseService]
         }).compile();
         controller = module.get<ExampleController>(ExampleController);
         dataSource = module.get<DataSource>(DataSource);

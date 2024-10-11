@@ -24,7 +24,7 @@ export class LoggingInterceptor implements NestInterceptor {
             }),
             catchError((error) => {
                 const timeElapsedMs: number = Date.now() - parseInt(id);
-                if (this._dev) this._logger.error(error);
+                if (this._dev) this._logger.error(composer.log("Error", error.message));
                 this._logger.verbose(composer.log("Response (Error)", `${signature} | timeElapsed:${timeElapsedMs}ms`));
                 throw error;
             })

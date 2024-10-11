@@ -1,5 +1,5 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor, HttpStatus, HttpException } from "@nestjs/common";
-import { catchError, map, Observable, of } from "rxjs";
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { map, Observable } from "rxjs";
 import { APIResponse } from "../../types/types";
 import { Paginated } from "nestjs-paginate";
 import { Request } from "express";
@@ -18,21 +18,6 @@ export class APIResponseInterceptor implements NestInterceptor {
                     paginated: data instanceof Paginated,
                     payload: data
                 } as APIResponse<any>;
-            }),
-            catchError((error) => {
-                error =
-                    error instanceof HttpException
-                        ? error
-                        : new HttpException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-                return of({
-                    success: false,
-                    path: request.url,
-                    requestMethod: request.method,
-                    error: {
-                        status: error.getStatus(),
-                        message: error.message
-                    }
-                } as APIResponse<any>);
             })
         );
     }

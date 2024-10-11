@@ -2,7 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { RootModule } from "./modules/root/root.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { APIResponseInterceptor } from "./common/interceptors/api-response/api-response.interceptor";
-import { TypeOrmExceptionFilter } from "./common/filters/type-orm-exception/type-orm-exception.filter";
+import { DefaultExceptionFilter } from "./common/filters/default-exception/default-exception.filter";
 import { LoggingInterceptor } from "./common/interceptors/logging/logging.interceptor";
 import environment from "../env/env";
 
@@ -26,7 +26,7 @@ async function bootstrap() {
     SwaggerModule.setup(env.api.path, app, document, { useGlobalPrefix: true, jsonDocumentUrl: env.api.jsonPath });
 
     // set up exception filters
-    app.useGlobalFilters(new TypeOrmExceptionFilter());
+    app.useGlobalFilters(new DefaultExceptionFilter());
 
     // set up global interceptors
     app.useGlobalInterceptors(new APIResponseInterceptor());

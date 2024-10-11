@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ExampleService, paginateConfig } from "./example.service";
 import { ExampleGetDTO } from "src/common/dto/example/example.get.dto";
 import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
 import { ExampleUpdateDTO } from "src/common/dto/example/example.update.dto";
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
-import { ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
 
 const path = "example";
 
@@ -35,14 +35,14 @@ export class ExampleController {
 
     @Post()
     @ApiParam({
-        name: "userCreateDTO",
+        name: "createDTO",
         type: ExampleCreateDTO,
         required: true,
         description: "The data to create a new example class entity."
     })
     @ApiOkResponse({ type: ExampleGetDTO, description: "Creates and returns a new example class entity." })
-    create(@Body() userCreateDTO: ExampleCreateDTO): Promise<ExampleGetDTO> {
-        return this.exampleService.create(userCreateDTO);
+    create(@Body() createDTO: ExampleCreateDTO): Promise<ExampleGetDTO> {
+        return this.exampleService.create(createDTO);
     }
 
     @Put(":id")
@@ -52,15 +52,14 @@ export class ExampleController {
         required: true,
         description: "The id of the example class entity to be updated."
     })
-    @ApiParam({
-        name: "userUpdateDTO",
+    @ApiBody({
         type: ExampleUpdateDTO,
         required: true,
         description: "The data to update an existing example class entity."
     })
     @ApiOkResponse({ type: null, description: "Updates an existing example class entity." })
-    update(@Param("id") id: number, userUpdateDTO: ExampleUpdateDTO): Promise<null> {
-        return this.exampleService.update(id, userUpdateDTO);
+    update(@Param("id") id: number, @Body() updateDTO: ExampleUpdateDTO): Promise<null> {
+        return this.exampleService.update(id, updateDTO);
     }
 
     @Delete(":id")
