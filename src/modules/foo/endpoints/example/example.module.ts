@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ExampleController } from "./example.controller";
 import { ExampleService } from "./example.service";
 import { DatabaseModule } from "src/modules/database/database.module";
-import { DatabaseService } from "src/modules/database/services/database/database.service";
+import { DatabaseService } from "src/modules/database/services/database.service";
 
 @Module({
     imports: [DatabaseModule],

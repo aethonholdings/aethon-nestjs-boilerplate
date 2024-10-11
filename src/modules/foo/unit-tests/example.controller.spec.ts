@@ -1,12 +1,12 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ExampleController } from "./example.controller";
+import { ExampleController } from "../endpoints/example/example.controller";
 import { Example } from "src/common/entities/example.entity";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { userTestData } from "src/common/test-data/user/user.test-data";
-import { ExampleService } from "./example.service";
+import { ExampleService } from "../endpoints/example/example.service";
 import { DataSource } from "typeorm";
 import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
-import { DatabaseService } from "src/modules/database/services/database/database.service";
+import { DatabaseService } from "src/modules/database/services/database.service";
 
 describe("UserController", () => {
     let controller: ExampleController;
