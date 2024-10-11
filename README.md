@@ -27,6 +27,14 @@
 
 Aethon Holdings Nestjs REST API boilerplate
 
+## Running
+
+`npm install`
+
+In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provided `env.example.ts`.
+
+`npm run start:dev` to run based on configuration in `env.dev.ts`.  Each of run `start:dev`, `start:test` overwrites `env.ts` with the corresponding env file,  before bootstraping NestJS, thus configuring the system.
+
 ## Dependencies/ extensions included
 1. [NestJS](https://docs.nestjs.com/) core
 2. [Prettier](https://prettier.io/docs/en/)
@@ -53,7 +61,6 @@ Aethon Holdings Nestjs REST API boilerplate
 All API responses conform to the `APIResponse<T>` type, whereby `<T>` is the DTO type and: 
 
 `export type APIResponse<T> = APIResponseData<T> | APIResponseError;`
-
 
 ### Data response
 
