@@ -4,7 +4,7 @@ import { DataSource } from "typeorm";
 import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
 import { Example } from "src/common/classes/entities/example.entity";
 import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
-import * as databaseConfig from "../mocks/database.config.mock";
+import * as databaseConfig from "../mocks/datasource.config.mock";
 
 describe("DatabaseService", () => {
     let service: DatabaseService;

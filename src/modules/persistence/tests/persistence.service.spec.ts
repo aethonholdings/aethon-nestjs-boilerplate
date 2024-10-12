@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PersistenceService } from "../services/persistence.service";
 import { DatabaseService } from "../services/database.service";
-import * as databaseConfig from "../mocks/database.config.mock";
+import * as databaseConfig from "../mocks/datasource.config.mock";
 import { Example } from "src/common/classes/entities/example.entity";
 import { DataSource } from "typeorm";
 import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
