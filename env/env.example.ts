@@ -10,6 +10,9 @@ export default () => ({
         path: "api",
         jsonPath: "json"
     },
+    redis: {
+        url: "redis://***.***.***.***:6379"
+    },
     db: {
         type: "mysql",
         host: "localhost",

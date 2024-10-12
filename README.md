@@ -54,6 +54,7 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 
 **To do**
 * Caching with [redis](https://redis.io/docs/latest/develop/)
+* api version paths
 * JWT auth
 
 ## API response schema
