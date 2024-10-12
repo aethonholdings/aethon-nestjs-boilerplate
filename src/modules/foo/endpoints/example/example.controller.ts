@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ExampleService, paginateConfig } from "./example.service";
-import { ExampleGetDTO } from "src/common/dto/example/example.get.dto";
-import { ExampleCreateDTO } from "src/common/dto/example/example.create.dto";
-import { ExampleUpdateDTO } from "src/common/dto/example/example.update.dto";
+import { ExampleGetDTO } from "src/common/classes/dto/example/example.get.dto";
+import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
+import { ExampleUpdateDTO } from "src/common/classes/dto/example/example.update.dto";
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
 import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
 

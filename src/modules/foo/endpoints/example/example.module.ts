@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
 import { ExampleController } from "./example.controller";
 import { ExampleService } from "./example.service";
-import { DatabaseModule } from "src/modules/database/database.module";
-import { DatabaseService } from "src/modules/database/services/database.service";
+import { PersistenceModule } from "src/modules/persistence/persistence.module";
+import { DatabaseService } from "src/modules/persistence/services/database.service";
 
 @Module({
-    imports: [DatabaseModule],
+    imports: [PersistenceModule],
     controllers: [ExampleController],
     providers: [ExampleService, DatabaseService]
 })

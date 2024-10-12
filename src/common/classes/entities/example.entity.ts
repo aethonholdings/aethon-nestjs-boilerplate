@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ExampleInterface } from "../interfaces/example.interface";
+import { ExampleInterface } from "src/common/interfaces/example.interface";
 
 @Entity()
 export class Example implements ExampleInterface {

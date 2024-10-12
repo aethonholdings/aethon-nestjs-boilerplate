@@ -74,7 +74,7 @@ export interface APIResponseData<T> {
 }
 ```
 
-### Error
+### Error Response
 ```
 export interface APIResponseError {
   success: boolean = false                      // false for true

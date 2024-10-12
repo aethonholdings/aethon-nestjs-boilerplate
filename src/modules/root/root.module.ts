@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { FooModule } from "../foo/foo.module";
 import { ConfigModule } from "@nestjs/config";
 import environment from "../../../env/env";
-import { DatabaseModule } from "src/modules/database/database.module";
+import { PersistenceModule } from "src/modules/persistence/persistence.module";
 
 @Module({
     imports: [
@@ -10,7 +10,7 @@ import { DatabaseModule } from "src/modules/database/database.module";
             load: [environment],
             isGlobal: true
         }),
-        DatabaseModule,
+        PersistenceModule,
         FooModule
     ]
 })

@@ -1,41 +1,42 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
-import { DeleteResult, FindOneOptions, Repository, UpdateResult } from "typeorm";
+import { DataSource, DeleteResult, FindOneOptions, UpdateResult, ObjectLiteral, EntityTarget } from "typeorm";
 
 @Injectable()
 export class DatabaseService {
-    constructor() {}
+    constructor(private readonly dataSource: DataSource) {}
 
     findAll<T>(
+        entity: EntityTarget<ObjectLiteral>,
         query: PaginateQuery,
-        repository: Repository<T>,
         paginateConfig: PaginateConfig<T>
-    ): Promise<Paginated<T>> {
+    ): Promise<Paginated<ObjectLiteral>> {
+        const repository = this.dataSource.getRepository(entity);
         return paginate(query, repository, paginateConfig);
     }
 
-    findOne<T>(repository: Repository<T>, options: FindOneOptions): Promise<T> {
+    findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {
+        const repository = this.dataSource.getRepository(entity);
         return repository.findOneOrFail(options).catch((error) => {
             throw error;
         });
     }
 
-    create<T>(repository: Repository<T>, dto: T): Promise<any> {
+    create(entity: EntityTarget<ObjectLiteral>, dto: any): Promise<ObjectLiteral> {
+        const repository = this.dataSource.getRepository(entity);
         return repository.save(dto);
     }
 
-    update<T>(id: number, repository: Repository<T>, dto: any): Promise<null> {
+    update(entity: EntityTarget<ObjectLiteral>, id: number, dto: any): Promise<null> {
         // check if the object submitted has an id that is inconsistent with the id in the URL
-        if (dto?.id && dto.id !== id) {
-            delete dto.id;
-            throw new HttpException("Bad request", HttpStatus.BAD_REQUEST);
-        }
+        const repository = this.dataSource.getRepository(entity);
         return repository.update(id, dto).then((result: UpdateResult) => {
             return this.checkIfFound(result);
         });
     }
 
-    remove<T>(id: number, repository: Repository<T>): Promise<null> {
+    delete(entity: EntityTarget<ObjectLiteral>, id: number): Promise<null> {
+        const repository = this.dataSource.getRepository(entity);
         return repository.delete(id).then((result: DeleteResult) => {
             return this.checkIfFound(result);
         });
