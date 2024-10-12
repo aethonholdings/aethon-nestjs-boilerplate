@@ -7,12 +7,12 @@ import { DatabaseService } from "./database.service";
 export class PersistenceService {
     constructor(private readonly databaseService: DatabaseService) {}
 
-    findAll<T>(
+    findAllPaginated<T>(
         entity: EntityTarget<ObjectLiteral>,
         query: PaginateQuery,
         paginateConfig: PaginateConfig<T>
     ): Promise<Paginated<ObjectLiteral>> {
-        return this.databaseService.findAll(entity, query, paginateConfig);
+        return this.databaseService.findAllPaginated(entity, query, paginateConfig);
     }
 
     findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {

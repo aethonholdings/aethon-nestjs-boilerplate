@@ -22,7 +22,7 @@ export class ExampleService {
     constructor(private readonly persistenceService: PersistenceService) {}
 
     async findAll(query: PaginateQuery): Promise<Paginated<ExampleGetDTO>> {
-        return this.persistenceService.findAll(Example, query, this._paginateConfig) as Promise<
+        return this.persistenceService.findAllPaginated(Example, query, this._paginateConfig) as Promise<
             Paginated<ExampleGetDTO>
         >;
     }

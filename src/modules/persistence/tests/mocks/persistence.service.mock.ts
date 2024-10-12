@@ -21,7 +21,7 @@ export class MockPersistenceService<HasId> {
         return this._data;
     }
 
-    findAll = jest.fn(async function <HasId>(
+    findAllPaginated = jest.fn(async function <HasId>(
         entity: EntityTarget<ObjectLiteral>,
         query: PaginateQuery,
         paginateConfig: PaginateConfig<HasId>

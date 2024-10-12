@@ -53,13 +53,13 @@ describe("DatabaseService", () => {
             });
         });
 
-        it("should find all", async () => {
+        it("should find all, paginated", async () => {
             await Promise.all(
                 testData.map(async (example) => {
                     return await service.create(test.entity, example);
                 })
             );
-            await service.findAll(test.entity, { path: "test" }, paginateConfig).then((results) => {
+            await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
                 expect(results.data.length).toEqual(testData.length);

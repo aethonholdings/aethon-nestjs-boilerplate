@@ -6,7 +6,7 @@ import { DataSource, DeleteResult, FindOneOptions, UpdateResult, ObjectLiteral, 
 export class DatabaseService {
     constructor(private readonly dataSource: DataSource) {}
 
-    findAll<T>(
+    findAllPaginated<T>(
         entity: EntityTarget<ObjectLiteral>,
         query: PaginateQuery,
         paginateConfig: PaginateConfig<T>
