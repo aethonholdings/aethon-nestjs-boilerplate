@@ -108,3 +108,6 @@ export interface Root {
     }
 }
 ```
+
+## Testing
+Run `npm run test` to run all Jest tests.

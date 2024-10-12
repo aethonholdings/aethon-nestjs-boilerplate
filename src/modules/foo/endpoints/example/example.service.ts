@@ -42,8 +42,4 @@ export class ExampleService {
     async delete(id: number): Promise<null> {
         return this.persistenceService.delete(Example, id) as Promise<null>;
     }
-
-    getPaginateConfig(): PaginateConfig<Example> {
-        return this._paginateConfig;
-    }
 }

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PersistenceService } from "../services/persistence.service";
-import { DatabaseService } from "../services/database.service";
+import { PersistenceService } from "../../services/persistence.service";
+import { DatabaseService } from "../../services/database.service";
 import * as databaseConfig from "../mocks/datasource.config.mock";
 import { Example } from "src/common/classes/entities/example.entity";
 import { DataSource } from "typeorm";
@@ -11,14 +11,14 @@ describe("PersistenceService", () => {
     let service: PersistenceService;
     let dataSource: DataSource;
     let testData: any[];
-    let tests: { entity: EntityClassOrSchema; data: any[] }[] = [
+    const tests: { entity: EntityClassOrSchema; data: any[] }[] = [
         {
             entity: Example,
             data: exampleTestData
         }
     ];
 
-    for (let test of tests) {
+    for (const test of tests) {
         beforeEach(async () => {
             const module: TestingModule = await Test.createTestingModule({
                 imports: databaseConfig.getImports([test.entity]),
@@ -33,7 +33,7 @@ describe("PersistenceService", () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
             await service.create(test.entity, example).then((result) => {
                 expect(result).toBeDefined();
-                for (let key in result) {
+                for (const key in result) {
                     expect(result[key]).toEqual(example[key]);
                 }
             });
@@ -44,7 +44,7 @@ describe("PersistenceService", () => {
             const created = await service.create(test.entity, example);
             await service.findOne(test.entity, { where: { id: created.id } }).then((result) => {
                 expect(result).toBeDefined();
-                for (let key in result) {
+                for (const key in result) {
                     expect(result[key]).toEqual(example[key]);
                 }
             });
@@ -60,10 +60,10 @@ describe("PersistenceService", () => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
                 expect(results.data.length).toEqual(testData.length);
-                for (let testEntity of testData) {
+                for (const testEntity of testData) {
                     const entity = results.data.find((result) => {
                         let found: number = 1;
-                        for (let key in result) {
+                        for (const key in result) {
                             if (key !== "id" && result[key] !== testEntity[key]) found = found * 0;
                         }
                         return found ? true : false;
