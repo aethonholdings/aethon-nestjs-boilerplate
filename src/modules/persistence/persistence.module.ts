@@ -17,8 +17,8 @@ const redisStore = require('cache-manager-redis-store').redisStore;
         } as TypeOrmModuleOptions),
         CacheModule.register<RedisClientOptions>({
             store: redisStore,
-            url: environment().redis.url
-
+            url: environment().redis.url,
+            isGlobal: true
         })
     ],
     providers: [PersistenceService, DatabaseService, CachingService],

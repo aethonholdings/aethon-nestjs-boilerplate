@@ -17,7 +17,7 @@ async function bootstrap() {
     // create the app
     const app = await NestFactory.create(RootModule, options);
 
-    // set up Swagger
+    // set up Swagger - make configuarable based on API version
     const config = new DocumentBuilder()
         .setTitle(env.api.title)
         .setDescription(env.api.description)
@@ -25,6 +25,9 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(env.api.path, app, document, { useGlobalPrefix: true, jsonDocumentUrl: env.api.jsonPath });
+
+    // add caching
+    
 
     // set up exception filters
     app.useGlobalFilters(new DefaultExceptionFilter());
