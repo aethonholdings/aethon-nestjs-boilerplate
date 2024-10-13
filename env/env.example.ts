@@ -11,7 +11,8 @@ export default () => ({
         jsonPath: "json"
     },
     redis: {
-        url: "redis://***.***.***.***:6379"
+        url: "redis://***.***.***.***:6379",
+        ttl: 60
     },
     db: {
         type: "mysql",

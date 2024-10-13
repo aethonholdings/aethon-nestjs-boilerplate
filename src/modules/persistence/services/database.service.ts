@@ -1,10 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
-import { DataSource, DeleteResult, FindOneOptions, UpdateResult, ObjectLiteral, EntityTarget } from "typeorm";
+import { DataSource, DeleteResult, FindOneOptions, UpdateResult, ObjectLiteral, EntityTarget, FindOptions } from "typeorm";
 
 @Injectable()
 export class DatabaseService {
     constructor(private readonly dataSource: DataSource) {}
+
+    findAll(entity: EntityTarget<ObjectLiteral>, options: FindOptions): Promise<ObjectLiteral[]> {
+        const repository = this.dataSource.getRepository(entity);
+        return repository.findBy(options);
+    }
 
     findAllPaginated<T>(
         entity: EntityTarget<ObjectLiteral>,
@@ -17,9 +22,7 @@ export class DatabaseService {
 
     findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {
         const repository = this.dataSource.getRepository(entity);
-        return repository.findOneOrFail(options).catch((error) => {
-            throw error;
-        });
+        return repository.findOneOrFail(options);
     }
 
     create(entity: EntityTarget<ObjectLiteral>, dto: any): Promise<ObjectLiteral> {

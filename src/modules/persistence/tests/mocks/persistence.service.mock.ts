@@ -1,5 +1,5 @@
 import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
-import { EntityTarget, FindOneOptions, ObjectLiteral } from "typeorm";
+import { EntityTarget, FindOneOptions, FindOptions, ObjectLiteral } from "typeorm";
 import { Example } from "src/common/classes/entities/example.entity";
 
 export class MockPersistenceService<HasId> {
@@ -21,6 +21,17 @@ export class MockPersistenceService<HasId> {
         return this._data;
     }
 
+    findAll = jest.fn(async function (
+        entity: EntityTarget<ObjectLiteral>,
+        options: FindOptions
+    ): Promise<ObjectLiteral[]> {
+        if (entity && options) {
+            // should be applying the filter options here
+            return this._data;
+        } else {
+            throw new Error("Missing parameters for findAll in Persistence layer");
+        }
+    });
     findAllPaginated = jest.fn(async function <HasId>(
         entity: EntityTarget<ObjectLiteral>,
         query: PaginateQuery,

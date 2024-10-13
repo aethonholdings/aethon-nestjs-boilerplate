@@ -2,10 +2,16 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { EntityTarget, FindOneOptions, ObjectLiteral } from "typeorm";
 import { DatabaseService } from "./database.service";
+import { CachingService } from "./caching.service";
 
 @Injectable()
 export class PersistenceService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    constructor(private readonly databaseService: DatabaseService, private readonly cachingService: CachingService) {}
+
+    findAll(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral[]> {
+        this.cachingService.get(options);
+        return this.databaseService.findAll(entity, options);
+    }
 
     findAllPaginated<T>(
         entity: EntityTarget<ObjectLiteral>,
@@ -34,5 +40,9 @@ export class PersistenceService {
 
     delete(entity: EntityTarget<ObjectLiteral>, id: number): Promise<null> {
         return this.databaseService.delete(entity, id);
+    }
+
+    runQuery(query: string) {
+        // to implement
     }
 }

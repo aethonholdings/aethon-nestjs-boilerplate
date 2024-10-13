@@ -31,12 +31,7 @@ describe("DatabaseService", () => {
         it("should create", async () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
             await service.create(test.entity, example).then((result) => {
-                expect(result).toBeDefined();
-                let flag: boolean = true;
-                for (const key in result) {
-                    if (result[key] !== example[key]) flag = false;
-                }
-                expect(flag).toBe(true);
+                expect(result).toEqual(example);
             });
         });
 
@@ -44,35 +39,39 @@ describe("DatabaseService", () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
             const created = await service.create(test.entity, example);
             await service.findOne(test.entity, { where: { id: created.id } }).then((result) => {
-                expect(result).toBeDefined();
-                let found: boolean = true;
-                for (const key in result) {
-                    if (result[key] !== created[key]) found = false;
-                }
-                expect(found).toBe(true);
+                expect(result).toEqual(created);
+            });
+        });
+
+        it("should find all", async () => {
+            let created = await Promise.all(
+                testData
+                    .map(async (example) => {
+                        return await service.create(test.entity, example);
+                    })
+                    .sort()
+            );
+            created = created.sort((a, b) => a.id - b.id);
+            await service.findAll(test.entity, {}).then((results) => {
+                results = JSON.parse(JSON.stringify(results));
+                results = (results.sort((a, b) => a.id - b.id));
+                expect(results).toEqual(created);
             });
         });
 
         it("should find all, paginated", async () => {
-            await Promise.all(
+            let created = await Promise.all(
                 testData.map(async (example) => {
                     return await service.create(test.entity, example);
                 })
             );
+            created = created.sort((a, b) => a.id - b.id);
             await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
-                expect(results.data.length).toEqual(testData.length);
-                for (const testEntity of testData) {
-                    const entity = results.data.find((result) => {
-                        let found: boolean = true;
-                        for (const key in result) {
-                            if (key !== "id" && result[key] !== testEntity[key]) found = false;
-                        }
-                        return found;
-                    });
-                    expect(entity).toBeDefined();
-                }
+                results.data = JSON.parse(JSON.stringify(results.data));
+                results.data = results.data.sort((a, b) => a.id - b.id);
+                expect(results.data).toEqual(created);
             });
         });
 

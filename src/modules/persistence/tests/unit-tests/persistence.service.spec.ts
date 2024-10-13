@@ -1,15 +1,20 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { PersistenceService } from "../../services/persistence.service";
 import { DatabaseService } from "../../services/database.service";
-import * as databaseConfig from "../mocks/datasource.config.mock";
 import { Example } from "src/common/classes/entities/example.entity";
 import { DataSource } from "typeorm";
 import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
+import { CachingService } from "../../services/caching.service";
+import { CACHE_MANAGER, Cache, CacheModule } from "@nestjs/cache-manager";
+import { RedisClientOptions } from "redis";
+import * as databaseConfig from "../mocks/datasource.config.mock";
+import * as cacheConfig from "../mocks/cache.config.mock";
 
 describe("PersistenceService", () => {
     let service: PersistenceService;
     let dataSource: DataSource;
+    let cacheManager: Cache;
     let testData: any[];
     const tests: { entity: EntityClassOrSchema; data: any[] }[] = [
         {
@@ -21,21 +26,22 @@ describe("PersistenceService", () => {
     for (const test of tests) {
         beforeEach(async () => {
             const module: TestingModule = await Test.createTestingModule({
-                imports: databaseConfig.getImports([test.entity]),
-                providers: [PersistenceService, DatabaseService]
+                imports: [
+                    ...databaseConfig.getImports([test.entity]),
+                    CacheModule.register<RedisClientOptions>(cacheConfig.getConfig())
+                ],
+                providers: [PersistenceService, DatabaseService, CachingService]
             }).compile();
             dataSource = module.get<DataSource>(DataSource);
             service = module.get<PersistenceService>(PersistenceService);
+            cacheManager = module.get(CACHE_MANAGER);
             testData = test.data;
         });
 
         it("should create", async () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
             await service.create(test.entity, example).then((result) => {
-                expect(result).toBeDefined();
-                for (const key in result) {
-                    expect(result[key]).toEqual(example[key]);
-                }
+                expect(result).toEqual(example);
             });
         });
 
@@ -43,33 +49,39 @@ describe("PersistenceService", () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
             const created = await service.create(test.entity, example);
             await service.findOne(test.entity, { where: { id: created.id } }).then((result) => {
-                expect(result).toBeDefined();
-                for (const key in result) {
-                    expect(result[key]).toEqual(example[key]);
-                }
+                expect(result).toEqual(created);
+            });
+        });
+
+        it("should find all", async () => {
+            let created = await Promise.all(
+                testData
+                    .map(async (example) => {
+                        return await service.create(test.entity, example);
+                    })
+                    .sort()
+            );
+            created = created.sort((a, b) => a.id - b.id);
+            await service.findAll(test.entity, {}).then((results) => {
+                results = JSON.parse(JSON.stringify(results));
+                results = results.sort((a, b) => a.id - b.id);
+                expect(results).toEqual(created);
             });
         });
 
         it("should find all, paginated", async () => {
-            await Promise.all(
+            let created = await Promise.all(
                 testData.map(async (example) => {
                     return await service.create(test.entity, example);
                 })
             );
+            created = created.sort((a, b) => a.id - b.id);
             await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
-                expect(results.data.length).toEqual(testData.length);
-                for (const testEntity of testData) {
-                    const entity = results.data.find((result) => {
-                        let found: number = 1;
-                        for (const key in result) {
-                            if (key !== "id" && result[key] !== testEntity[key]) found = found * 0;
-                        }
-                        return found ? true : false;
-                    });
-                    expect(entity).toBeDefined();
-                }
+                results.data = JSON.parse(JSON.stringify(results.data));
+                results.data = results.data.sort((a, b) => a.id - b.id);
+                expect(results.data).toEqual(created);
             });
         });
 
@@ -93,5 +105,6 @@ describe("PersistenceService", () => {
 
     afterEach(async () => {
         await dataSource.destroy();
+        await cacheManager.reset();
     });
 });

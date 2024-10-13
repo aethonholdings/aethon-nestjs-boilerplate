@@ -1,6 +1,8 @@
 import { RequestMethod } from "@nestjs/common";
 import { Paginated } from "nestjs-paginate";
 
+export type Cacheable<T> = { key: string; cached: boolean; start: number; end?: number; ttl: number; data: T };
+
 export type APIResponse<T> = APIResponseData<T> | APIResponseError;
 
 export type APIResponseData<T> = APIResponseOneData<T> | APIResponsePaginatedData<T>;

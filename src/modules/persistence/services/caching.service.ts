@@ -1,29 +1,23 @@
 import { Cache } from "cache-manager";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
-import { FindOneOptions, FindOptions, ObjectLiteral } from "typeorm";
+import { FindOneOptions, ObjectLiteral } from "typeorm";
 
 @Injectable()
 export class CachingService {
     constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-    findAll(options: FindOptions): Promise<ObjectLiteral[]> {
-        return null;
+    async get(options: FindOneOptions): Promise<ObjectLiteral> {
+        return this.cacheManager.get(options.where["id"]?.toString());
     }
 
-    findOne(options: FindOneOptions): Promise<ObjectLiteral> {
-        return null;
+    async set(key: string, dto: any): Promise<boolean> {
+        await this.cacheManager.set(key, dto);
+        return true;
     }
 
-    create(dto: any): Promise<ObjectLiteral> {
-        return null;
-    }
-
-    update(id: number, dto: any): Promise<null> {
-        return null;
-    }
-
-    delete(id: number): Promise<null> {
+    async delete(key: string): Promise<boolean> {
+        await this.cacheManager.del(key);
         return null;
     }
 }
