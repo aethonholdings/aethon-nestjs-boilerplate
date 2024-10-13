@@ -4,9 +4,7 @@ import { CACHE_MANAGER, CacheModule } from "@nestjs/cache-manager";
 import { RedisClientOptions } from "redis";
 import * as cacheConfig from "../mocks/cache.config.mock";
 
-// this test hangs because the Redis cache under the current dependencies cannot be reset at the 
-// end of each test
-describe("CachingService", () => {
+describe("CachingService - this test hangs because the Redis cache under the current dependencies cannot be reset", () => {
     let service: CachingService;
     let cacheManager: Cache;
 
@@ -19,7 +17,8 @@ describe("CachingService", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [CacheModule.register<RedisClientOptions>(cacheConfig.getConfig())],
-            providers: [CachingService]}).compile();
+            providers: [CachingService]
+        }).compile();
         service = module.get<CachingService>(CachingService);
         cacheManager = module.get(CACHE_MANAGER);
     });
@@ -28,17 +27,22 @@ describe("CachingService", () => {
         expect(service).toBeDefined();
     });
 
-    it("should set a value", async () => {
+    it("should set and get a value", async () => {
         const example = testData[0];
-        let success = await service.set(example.id.toString(), example);
-        expect(success).toBe(true);
+        const key = JSON.stringify(`POJO:test:{ where: { id: example.id } }`);
+        await service.set(key, example);
+        const result = await service.get(key);
+        expect(result).toEqual(example);
+        await service.delete(key);
     });
 
-    it("should find one", async () => {
+    it("should delete a value", async () => {
         const example = testData[0];
-        await service.set(example.id.toString(), example);
-        const result = await service.get({ where: { id: example.id } });
-        expect(result).toEqual(example);
+        const key = JSON.stringify(`POJO:test:{ where: { id: example.id } }`);
+        await service.set(key, example);
+        await service.delete(key);
+        const result = await service.get(key);
+        expect(result).toBeNull();
     });
 
     afterEach(async () => {

@@ -5,6 +5,7 @@ import * as composer from "../../utils/composer";
 import env from "../../../../env/env";
 
 // Interceptor that logs the request and response data and outputs errors to the console in development mode
+// correction can be made to how the time elapsed is calculated, it is inefficient now with the type conversions
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
     private readonly _dev = env().root.dev;

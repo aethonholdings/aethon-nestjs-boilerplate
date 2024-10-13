@@ -1,19 +1,33 @@
 import { Cache } from "cache-manager";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Inject, Injectable } from "@nestjs/common";
-import { FindOneOptions, ObjectLiteral } from "typeorm";
+import { Cacheable } from "src/common/types/types";
+import env from 'env/env';
+
 
 @Injectable()
 export class CachingService {
+    private readonly _defaultTtl = env().redis.ttl;
+
     constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-    async get(options: FindOneOptions): Promise<ObjectLiteral> {
-        return this.cacheManager.get(options.where["id"]?.toString());
+    async get<T>(key: string): Promise<Cacheable<T>> {
+        return this.cacheManager.get(key);
     }
 
-    async set(key: string, dto: any): Promise<boolean> {
-        await this.cacheManager.set(key, dto);
-        return true;
+    async set<T>(key: string, data: T, ttl?: number): Promise<Cacheable<T>> {
+        const timestamp: number = Date.now();
+        const ttlTarget: number = ttl || this._defaultTtl;
+        return this.cacheManager.set(key, data, ttl).then((result) => {
+            return {
+                key: key,
+                start: timestamp,
+                end: timestamp + ttlTarget,
+                ttl: ttlTarget,
+                cached: false,
+                data: data
+            }
+        });
     }
 
     async delete(key: string): Promise<boolean> {

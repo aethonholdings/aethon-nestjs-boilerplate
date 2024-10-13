@@ -4,7 +4,6 @@ import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.
 import { ExampleGetDTO } from "src/common/classes/dto/example/example.get.dto";
 import { ExampleUpdateDTO } from "src/common/classes/dto/example/example.update.dto";
 import { Example } from "src/common/classes/entities/example.entity";
-import { Repository } from "typeorm";
 import { PersistenceService } from "src/modules/persistence/services/persistence.service";
 
 export const paginateConfig: PaginateConfig<Example> = {
@@ -16,7 +15,6 @@ export const paginateConfig: PaginateConfig<Example> = {
 // intereact with the persistence layer, and return data as standardised DTOs
 @Injectable()
 export class ExampleService {
-    private readonly _exampleRepository: Repository<Example>;
     private readonly _paginateConfig: PaginateConfig<Example> = paginateConfig;
 
     constructor(private readonly persistenceService: PersistenceService) {}

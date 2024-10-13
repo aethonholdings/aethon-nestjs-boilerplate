@@ -22,6 +22,12 @@ describe("PersistenceService", () => {
             data: exampleTestData
         }
     ];
+    const cacheConfigs = [
+        { cached: true, cache: true },
+        { cached: false, cache: true },
+        { cached: true, cache: false },
+        { cached: false, cache: false }
+    ];
 
     for (const test of tests) {
         beforeEach(async () => {
@@ -69,21 +75,24 @@ describe("PersistenceService", () => {
             });
         });
 
-        it("should find all, paginated", async () => {
-            let created = await Promise.all(
-                testData.map(async (example) => {
-                    return await service.create(test.entity, example);
-                })
-            );
-            created = created.sort((a, b) => a.id - b.id);
-            await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
-                expect(results).toBeDefined();
-                expect(results.data).toBeDefined();
-                results.data = JSON.parse(JSON.stringify(results.data));
-                results.data = results.data.sort((a, b) => a.id - b.id);
-                expect(results.data).toEqual(created);
-            });
-        });
+        for(let cacheConfig of cacheConfigs) {
+            it(`should find all, paginated - cacheConfig:${JSON.stringify(cacheConfig)}`, async () => {
+                let created = await Promise.all(
+                    testData.map(async (example) => {
+                        return await service.create(test.entity, example);
+                    })
+                );
+                created = created.sort((a, b) => a.id - b.id);
+            
+                await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig, cacheConfig).then((results) => {
+                    expect(results).toBeDefined();
+                    expect(results.data).toBeDefined();
+                    results.data = JSON.parse(JSON.stringify(results.data));
+                    results.data = results.data.sort((a, b) => a.id - b.id);
+                    expect(results.data).toEqual(created);
+                });
+            })
+        };
 
         it("should update", async () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
