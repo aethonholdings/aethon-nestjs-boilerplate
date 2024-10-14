@@ -9,7 +9,7 @@
         "build": "nest build",
         "build:test": "cp -rv ./env/env.test.ts ./env/env.ts && nest build",
         "build:prod": "cp -rv ./env/env.prod.ts ./env/env.ts && nest build",
-        "doc": "npx @compodoc/compodoc -p tsconfig.json -s",
+        "doc": "npx @compodoc/compodoc -p tsconfig.json -d docs -s",
         "start": "nest start",
         "start:dev": "cp -rv ./env/env.dev.ts ./env/env.ts && nest start --watch",
         "start:test": "cp -rv ./env/env.test.ts ./env/env.ts && nest start --debug --watch",

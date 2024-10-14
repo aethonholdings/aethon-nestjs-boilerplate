@@ -109,6 +109,7 @@
 <p><code>npm install</code></p>
 <p>In <code>\env</code>, create <code>env.dev.ts</code>, <code>env.test.ts</code> and <code>env.prod.ts</code> based on provided <code>env.example.ts</code>.</p>
 <p><code>npm run start:dev</code> to run based on configuration in <code>env.dev.ts</code>.  Each of run <code>start:dev</code>, <code>start:test</code> overwrites <code>env.ts</code> with the corresponding env file,  before bootstraping NestJS, thus configuring the system.</p>
+<p>Check the <code>http://localhost:3000/api/v0.1/swagger</code> for the Swagger endpoint.</p>
 <h2>Dependencies/ extensions included</h2>
 <ol>
 <li><a href="https://docs.nestjs.com/">NestJS</a> core</li>
@@ -120,6 +121,7 @@
 <li><a href="https://docs.nestjs.com/openapi/introduction">nestjs/swagger</a></li>
 <li><a href="https://github.com/typestack/class-validator">class-validator</a></li>
 <li><a href="https://redis.io/docs/latest/develop/">redis</a></li>
+<li><a href="https://compodoc.app/guides/getting-started.html">compodoc</a></li>
 </ol>
 <h2>Features set up</h2>
 <ul>
@@ -129,10 +131,10 @@
 <li>Request, response and error event logging</li>
 <li>Parameter validation</li>
 <li>Caching with Redis</li>
+<li>api version paths</li>
 </ul>
 <p><strong>To do</strong></p>
 <ul>
-<li>api version paths</li>
 <li>JWT auth</li>
 </ul>
 <h2>Technical notes</h2>
