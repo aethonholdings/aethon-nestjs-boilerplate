@@ -51,9 +51,9 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 * Standardised responses
 * Request, response and error event logging
 * Parameter validation
+* Caching with [redis](https://redis.io/docs/latest/develop/)
 
 **To do**
-* Caching with [redis](https://redis.io/docs/latest/develop/)
 * api version paths
 * JWT auth
 
@@ -111,4 +111,4 @@ export interface Root {
 ```
 
 ## Testing
-Run `npm run test` to run all Jest tests.
+Example unit tests are included for all key components.  Run `npm run test` to run all Jest tests.
