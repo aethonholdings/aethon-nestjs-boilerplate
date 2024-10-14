@@ -1,6 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
-import { DataSource, DeleteResult, FindOneOptions, UpdateResult, ObjectLiteral, EntityTarget, FindOptions } from "typeorm";
+import {
+    DataSource,
+    DeleteResult,
+    FindOneOptions,
+    UpdateResult,
+    ObjectLiteral,
+    EntityTarget,
+    FindOptions,
+    SelectQueryBuilder
+} from "typeorm";
 
 @Injectable()
 export class DatabaseService {
@@ -43,6 +52,16 @@ export class DatabaseService {
         return repository.delete(id).then((result: DeleteResult) => {
             return this.checkIfFound(result);
         });
+    }
+
+    runQuery<T>(query: SelectQueryBuilder<T>, raw: boolean = false): Promise<T[]> {
+        if (raw) return query.getRawMany();
+        return query.getMany();
+    }
+
+    getQueryBuilder<T>(entity?: EntityTarget<T>): SelectQueryBuilder<T> {
+        if (entity) return this.dataSource.getRepository(entity).createQueryBuilder();
+        return this.dataSource.createQueryBuilder();
     }
 
     private checkIfFound(result: DeleteResult | UpdateResult): null {

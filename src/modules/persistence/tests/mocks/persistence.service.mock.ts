@@ -70,7 +70,7 @@ export class MockPersistenceService<HasId> {
     });
     create = jest.fn(async function (entity: EntityTarget<ObjectLiteral>, dto: any): Promise<ObjectLiteral> {
         if (entity && dto) {
-            const newId = this._data.length ? this._data.sort((a, b) => b.id - a.id)[this._data.length - 1].id + 1 : 1;
+            let newId = this._data.length ? this._data.sort((a, b) => b.id - a.id)[this._data.length - 1].id + 1 : 1;
             const newEntity = { id: newId, ...dto };
             this._data.push(newEntity);
             return newEntity;
@@ -80,19 +80,9 @@ export class MockPersistenceService<HasId> {
     });
     update = jest.fn(async function (entity: EntityTarget<ObjectLiteral>, id: number, dto: any): Promise<null> {
         if (entity && id && dto) {
-            this.findOne(entity, { where: { id: id } }).then((result) => {
-                if (result) {
-                    this._data = this._data.map((item) => {
-                        if (item.id === id) {
-                            return { id: id, ...dto };
-                        } else {
-                            return item;
-                        }
-                    });
-                } else {
-                    throw new Error("ID not found for update in Persistence layer");
-                }
-            });
+            let index = this._data.findIndex((item) => item.id === id);
+            if(index===undefined) throw new Error("ID not found for update in Persistence layer");
+            this._data[index] = { id: id, ...dto };
             return null;
         } else {
             throw new Error("Missing parameters for update in Persistence layer");
@@ -100,13 +90,9 @@ export class MockPersistenceService<HasId> {
     });
     delete = jest.fn(async function (entity: EntityTarget<ObjectLiteral>, id: number): Promise<null> {
         if (entity && id) {
-            this.findOne(entity, { where: { id: id } }).then((result) => {
-                if (result) {
-                    this._data = this._data.filter((item) => item.id !== id);
-                } else {
-                    throw new Error("ID not found for delete in Persistence layer");
-                }
-            });
+            let index = this._data.findIndex((item) => item.id === id);
+            if(index===undefined) throw new Error("ID not found for delete in Persistence layer");
+            this._data = this._data.filter((item) => item.id !== id);
             return null;
         } else {
             throw new Error("Missing parameters for delete in Persistence layer");

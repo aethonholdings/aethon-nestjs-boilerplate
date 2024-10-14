@@ -2,7 +2,7 @@ import { RequestMethod } from "@nestjs/common";
 import { Paginated } from "nestjs-paginate";
 
 export type Cacheable<T> = { key: string; cached: boolean; start: number; end?: number; ttl: number; data: T };
-export type CacheOptions = { cached?: boolean; cache?: boolean, ttl?: number };
+export type CacheStrategyOptions = { key: string, cached: boolean, cache: boolean, ttl?: number };
 
 export type APIResponse<T> = APIResponseData<T> | APIResponseError;
 

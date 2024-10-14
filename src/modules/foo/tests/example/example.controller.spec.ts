@@ -3,24 +3,23 @@ import { ExampleController } from "../../endpoints/example/example.controller";
 import { ExampleService } from "../../endpoints/example/example.service";
 import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
 import { exampleTestData } from "src/common/test-data/example.test-data";
-import { MockPersistenceService } from "src/modules/persistence/tests/mocks/persistence.service.mock";
 import { Example } from "src/common/classes/entities/example.entity";
 import { PersistenceService } from "src/modules/persistence/services/persistence.service";
-import * as dataSourceConfig from "../../../persistence/tests/mocks/datasource.config.mock";
+import * as dataSourceConfig from "../../../persistence/tests/mocks/data-source.config.mock";
+import { MockPersistenceService } from "src/modules/persistence/tests/mocks/persistence.service.mock";
 
 describe("UserController", () => {
     // configurable variables
-    type EntityType = Example;
+    const EntityType = Example;
     type ControllerType = ExampleController;
     const controllerTested = ExampleController;
     const typeOrmEntities = [Example];
-    let testData: ExampleCreateDTO[];
+    const updateExample = { firstName: "Updated" };
 
-    let persistenceService: MockPersistenceService<EntityType>;
-    let controller: ExampleController;
+    let testData: ExampleCreateDTO[];
+    let controller: ControllerType;
 
     beforeEach(async () => {
-        persistenceService = new MockPersistenceService<EntityType>();
         const module: TestingModule = await Test.createTestingModule({
             imports: dataSourceConfig.getImports(typeOrmEntities),
             controllers: [ExampleController],
@@ -28,7 +27,7 @@ describe("UserController", () => {
                 ExampleService,
                 {
                     provide: PersistenceService,
-                    useValue: persistenceService
+                    useValue: new MockPersistenceService()
                 }
             ]
         }).compile();
@@ -44,11 +43,8 @@ describe("UserController", () => {
         const example = JSON.parse(JSON.stringify(testData[0]));
         await controller.create(example).then((result) => {
             expect(result).toBeDefined();
-            let flag: boolean = true;
-            for (const key in result) {
-                if (key !== "id" && result[key] !== example[key]) flag = false;
-            }
-            expect(flag).toBe(true);
+            delete result.id;
+            expect(result).toEqual(example);
         });
     });
 
@@ -56,43 +52,29 @@ describe("UserController", () => {
         const example = JSON.parse(JSON.stringify(testData[0]));
         const created = await controller.create(example);
         await controller.findOne(created.id).then((result) => {
-            expect(result).toBeDefined();
-            let flag: boolean = true;
-            for (const key in result) {
-                if (result[key] !== created[key]) flag = false;
-            }
-            expect(flag).toBe(true);
+            expect(result).toEqual(created);
         });
     });
 
     it("should find all", async () => {
-        await Promise.all(
+        let created = await Promise.all(
             testData.map(async (example) => {
                 return await controller.create(example);
             })
         );
+        created = created.sort((a, b) => a.id - b.id);
         await controller.findAll({ path: "test" }).then((results) => {
-            expect(results).toBeDefined();
-            expect(results.data).toBeDefined();
-            expect(results.data.length).toEqual(testData.length);
-            for (const testEntity of testData) {
-                const entity = results.data.find((result) => {
-                    let found: number = 1;
-                    for (const key in result) {
-                        if (key !== "id" && result[key] !== testEntity[key]) found = found * 0;
-                    }
-                    return found ? true : false;
-                });
-                expect(entity).toBeDefined();
-            }
+            results = JSON.parse(JSON.stringify(results));
+            results.data = results.data.sort((a, b) => a.id - b.id);
+            expect(results.data).toEqual(created);
         });
     });
 
     it("should update", async () => {
         const example = JSON.parse(JSON.stringify(testData[0]));
-        const updatedUser = { ...example, firstName: "Updated" };
         const created = await controller.create(example);
-        await controller.update(created.id, updatedUser).then((result) => {
+        const updated = { ...example, ...updateExample };
+        await controller.update(created.id, updated).then((result) => {
             expect(result).toBeNull();
         });
     });
@@ -105,7 +87,5 @@ describe("UserController", () => {
         });
     });
 
-    afterEach(async () => {
-        persistenceService.clearData();
-    });
+    afterEach(async () => {});
 });

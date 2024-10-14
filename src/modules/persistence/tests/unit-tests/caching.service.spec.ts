@@ -45,7 +45,20 @@ describe("CachingService - this test hangs because the Redis cache under the cur
         expect(result).toBeNull();
     });
 
+    it("should flush", async () => {
+        const example = testData[0];
+        example.id = 1;
+        const key = JSON.stringify(`POJO:test:${example.id}`);
+        await service.set(key, example);
+        let result = await service.get(key);
+        expect(result).toEqual(example);
+        await service.flush();
+        result = await service.get(key);
+        expect(result).toBeNull();
+    });
+
     afterEach(async () => {
-        // cacheManager.reset() ;
+        // Need to reset the client otherwise the test hangs; but cannot get a handle to the Redis client
+        // from the CacheManager, the relevant methods are not exported in the module
     });
 });

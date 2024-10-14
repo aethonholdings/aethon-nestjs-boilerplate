@@ -3,7 +3,7 @@ import { DatabaseService } from "../../services/database.service";
 import { DataSource } from "typeorm";
 import { Example } from "src/common/classes/entities/example.entity";
 import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
-import * as databaseConfig from "../mocks/datasource.config.mock";
+import * as databaseConfig from "../mocks/data-source.config.mock";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 
 describe("DatabaseService", () => {

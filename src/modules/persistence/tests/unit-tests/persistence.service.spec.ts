@@ -2,19 +2,16 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { PersistenceService } from "../../services/persistence.service";
 import { DatabaseService } from "../../services/database.service";
 import { Example } from "src/common/classes/entities/example.entity";
-import { DataSource } from "typeorm";
+import { LessThan } from "typeorm";
 import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 import { CachingService } from "../../services/caching.service";
-import { CACHE_MANAGER, Cache, CacheModule } from "@nestjs/cache-manager";
-import { RedisClientOptions } from "redis";
-import * as databaseConfig from "../mocks/datasource.config.mock";
-import * as cacheConfig from "../mocks/cache.config.mock";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import * as databaseConfig from "../mocks/data-source.config.mock";
+import { mockCacheManager } from "../mocks/cache-manager.mock";
 
 describe("PersistenceService", () => {
     let service: PersistenceService;
-    let dataSource: DataSource;
-    let cacheManager: Cache;
     let testData: any[];
     const tests: { entity: EntityClassOrSchema; data: any[] }[] = [
         {
@@ -22,25 +19,22 @@ describe("PersistenceService", () => {
             data: exampleTestData
         }
     ];
-    const cacheConfigs = [
-        { cached: true, cache: true },
-        { cached: false, cache: true },
-        { cached: true, cache: false },
-        { cached: false, cache: false }
-    ];
 
     for (const test of tests) {
         beforeEach(async () => {
             const module: TestingModule = await Test.createTestingModule({
-                imports: [
-                    ...databaseConfig.getImports([test.entity]),
-                    CacheModule.register<RedisClientOptions>(cacheConfig.getConfig())
-                ],
-                providers: [PersistenceService, DatabaseService, CachingService]
+                imports: [...databaseConfig.getImports([test.entity])],
+                providers: [
+                    PersistenceService,
+                    DatabaseService,
+                    CachingService,
+                    {
+                        provide: CACHE_MANAGER,
+                        useValue: new mockCacheManager()
+                    }
+                ]
             }).compile();
-            dataSource = module.get<DataSource>(DataSource);
             service = module.get<PersistenceService>(PersistenceService);
-            cacheManager = module.get(CACHE_MANAGER);
             testData = test.data;
         });
 
@@ -65,7 +59,6 @@ describe("PersistenceService", () => {
                     .map(async (example) => {
                         return await service.create(test.entity, example);
                     })
-                    .sort()
             );
             created = created.sort((a, b) => a.id - b.id);
             await service.findAll(test.entity, {}).then((results) => {
@@ -75,24 +68,22 @@ describe("PersistenceService", () => {
             });
         });
 
-        for(let cacheConfig of cacheConfigs) {
-            it(`should find all, paginated - cacheConfig:${JSON.stringify(cacheConfig)}`, async () => {
-                let created = await Promise.all(
-                    testData.map(async (example) => {
-                        return await service.create(test.entity, example);
-                    })
-                );
-                created = created.sort((a, b) => a.id - b.id);
-            
-                await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig, cacheConfig).then((results) => {
-                    expect(results).toBeDefined();
-                    expect(results.data).toBeDefined();
-                    results.data = JSON.parse(JSON.stringify(results.data));
-                    results.data = results.data.sort((a, b) => a.id - b.id);
-                    expect(results.data).toEqual(created);
-                });
-            })
-        };
+        it("should find all, paginated", async () => {
+            let created = await Promise.all(
+                testData.map(async (example) => {
+                    return await service.create(test.entity, example);
+                })
+            );
+            created = created.sort((a, b) => a.id - b.id);
+
+            await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
+                expect(results).toBeDefined();
+                expect(results.data).toBeDefined();
+                results.data = JSON.parse(JSON.stringify(results.data));
+                results.data = results.data.sort((a, b) => a.id - b.id);
+                expect(results.data).toEqual(created);
+            });
+        });
 
         it("should update", async () => {
             const example = JSON.parse(JSON.stringify(testData[0]));
@@ -110,10 +101,57 @@ describe("PersistenceService", () => {
                 expect(result).toBeNull();
             });
         });
+
+        it("should run query", async () => {
+            let created = await Promise.all(
+                testData.map(async (example) => {
+                    return await service.create(test.entity, example);
+                })
+            );
+            created = created.sort((a, b) => a.id - b.id);
+            const query = service
+                .getQueryBuilder(test.entity)
+                .select()
+                .where({ id: LessThan(created[1].id) });
+            await service.runQuery(query).then((results) => {
+                results = results.sort((a, b) => a.id - b.id);
+                expect(results).toBeDefined();
+                expect(results.length).toBeGreaterThan(0);
+                results.forEach((result, i) => {
+                    expect(result.id).toBe(created[i].id);
+                });
+            });
+        });
     }
 
+    it("should get key", () => {
+        const key = service.getKey(["test", "key"]);
+        expect(key).toBe("test:key");
+    });
+
+    it("should set a cache value", async () => {
+        const key = "test:key";
+        const data = { test: "data" };
+        await service.cacheSet(key, data).then((result) => {
+            expect(result).toBeDefined();
+            expect(result.key).toBe(key);
+            expect(result.data).toEqual(data);
+        });
+    });
+
+    it("should get a cache value", async () => {
+        const key = "test:key";
+        const data = { test: "data" };
+        await service.cacheSet(key, data);
+        await service.cacheGet(key).then((result) => {
+            expect(result).toBeDefined();
+            expect(result.key).toBe(key);
+            expect(result.data).toEqual(data);
+        });
+    });
+
     afterEach(async () => {
-        await dataSource.destroy();
-        await cacheManager.reset();
+        // Need to reset the client otherwise the test hangs; but cannot get a handle to the Redis client
+        // from the CacheManager, the relevant methods are not exported in the module
     });
 });
