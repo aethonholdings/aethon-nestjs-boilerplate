@@ -8,7 +8,7 @@ import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
 
 const path = "example";
 
-@Controller(path)
+@Controller({path: path, version: "0.1"})
 @ApiTags("example")
 export class ExampleController {
     constructor(private exampleService: ExampleService) {}

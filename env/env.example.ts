@@ -1,15 +1,16 @@
 export default () => ({
     root: {
         dev: true,
-        port: 3000
+        port: 3000,
+        prefix: "api"
     },
-    api: {
+    api: [{
         version: "0.1",
         title: "Aethon NestJS boilerplate",
         description: "The Aethon NestJS boilerplate API",
-        path: "api",
-        jsonPath: "json"
-    },
+        path: "swagger",
+        jsonPath: "swagger/json"
+    }],
     redis: {
         url: "redis://***.***.***.***:6379",
         ttl: 60

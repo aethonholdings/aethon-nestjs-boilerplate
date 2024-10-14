@@ -54,9 +54,9 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 * Request, response and error event logging
 * Parameter validation
 * Caching with Redis
+* api version paths
 
 **To do**
-* api version paths
 * JWT auth
 
 ## Technical notes
