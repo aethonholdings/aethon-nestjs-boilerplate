@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from "@nestjs/common";
 import { Request } from "express";
 import { catchError, Observable, tap } from "rxjs";
-import * as composer from "../../utils/composer";
+import * as utils from "../../utils/utils";
 import env from "../../../../env/env";
 
 // Interceptor that logs the request and response data and outputs errors to the console in development mode
@@ -17,16 +17,16 @@ export class LoggingInterceptor implements NestInterceptor {
         const endpoint: string = request.url;
         const signature: string = `${id} {${endpoint}, ${request.method}}`;
 
-        this._logger.verbose(composer.log("Request", signature));
+        this._logger.verbose(utils.log("Request", signature));
         return next.handle().pipe(
             tap(() => {
                 const timeElapsedMs: number = Date.now() - parseInt(id);
-                this._logger.verbose(composer.log("Response (OK)", `${signature} | timeElapsed:${timeElapsedMs}ms`));
+                this._logger.verbose(utils.log("Response (OK)", `${signature} | timeElapsed:${timeElapsedMs}ms`));
             }),
             catchError((error) => {
                 const timeElapsedMs: number = Date.now() - parseInt(id);
-                if (this._dev) this._logger.error(composer.log("Error", error.message));
-                this._logger.verbose(composer.log("Response (Error)", `${signature} | timeElapsed:${timeElapsedMs}ms`));
+                if (this._dev) this._logger.error(utils.log("Error", error.message));
+                this._logger.verbose(utils.log("Response (Error)", `${signature} | timeElapsed:${timeElapsedMs}ms`));
                 throw error;
             })
         );

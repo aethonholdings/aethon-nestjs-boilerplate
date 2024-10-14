@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
-import { EntityTarget, FindOneOptions, ObjectLiteral, DataSource, SelectQueryBuilder } from "typeorm";
+import { EntityTarget, FindOneOptions, ObjectLiteral, SelectQueryBuilder } from "typeorm";
 import { DatabaseService } from "./database.service";
 import { CachingService } from "./caching.service";
 import { Cacheable, CacheStrategyOptions } from "src/common/types/types";
+import * as utils from "src/common/utils/utils";
 
 @Injectable()
 export class PersistenceService {
@@ -58,22 +59,30 @@ export class PersistenceService {
         return this.databaseService.getQueryBuilder(entity);
     }
 
-    getKey(strings: string[]): string {
-        return strings
-            .join(":")
-            .replace(/\r?\n|\r/g, " ")
-            .replace(/\s+/g, " ")
-            .replace(/ /g, "");
-    }
-
-    cacheSet<T>(key: string, data: T, ttl?: number): Promise<Cacheable<T>> {
-        return this.cachingService.set(key, data, ttl);
-    }
-
-    cacheGet<T>(key: string): Promise<Cacheable<T>> {
+    findOneInCache<T>(key: string): Promise<Cacheable<T>> {
         return this.cachingService.get(key);
     }
-    
+
+    createInCache<T>(key: string, data: T, ttl?: number): Promise<Cacheable<T>> {
+        // ensure that we are not overwriting a record with a create operation
+        return this.cachingService.get(key).then((cached) => {
+            if (cached) throw new Error(utils.log("PersistenceService.createInCache", `Existing record found for key: ${key}`));
+            return this.cachingService.set(key, data, ttl);
+        });
+    }
+
+    updateInCache<T>(key: string, data: T, ttl?: number): Promise<Cacheable<T>> {
+        // ensure that we are not updating a record that does not exist
+        return this.cachingService.get(key).then((cached) => {
+            if (!cached) throw new Error(utils.log("PersistenceService.updateInCache", `Record not found for key: ${key}`));
+            return this.cachingService.set(key, data, ttl);
+        });
+    }
+
+    deleteInCache(key: string): Promise<void> {
+        return this.cachingService.delete(key);
+    }
+
     private _fetch<T>(query: Promise<T>, cacheOptions: CacheStrategyOptions): Promise<T> {
         if (!cacheOptions || (!cacheOptions.cache && !cacheOptions.cached)) return query;
         const dbFetch: Promise<T> = query.then((data) => {

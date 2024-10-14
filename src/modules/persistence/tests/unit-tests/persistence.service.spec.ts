@@ -7,8 +7,9 @@ import { exampleTestData, paginateConfig } from "src/common/test-data/example.te
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 import { CachingService } from "../../services/caching.service";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import * as databaseConfig from "../mocks/data-source.config.mock";
 import { mockCacheManager } from "../mocks/cache-manager.mock";
+import * as databaseConfig from "../mocks/data-source.config.mock";
+import * as utils from "src/common/utils/utils";
 
 describe("PersistenceService", () => {
     let service: PersistenceService;
@@ -55,10 +56,9 @@ describe("PersistenceService", () => {
 
         it("should find all", async () => {
             let created = await Promise.all(
-                testData
-                    .map(async (example) => {
-                        return await service.create(test.entity, example);
-                    })
+                testData.map(async (example) => {
+                    return await service.create(test.entity, example);
+                })
             );
             created = created.sort((a, b) => a.id - b.id);
             await service.findAll(test.entity, {}).then((results) => {
@@ -124,15 +124,10 @@ describe("PersistenceService", () => {
         });
     }
 
-    it("should get key", () => {
-        const key = service.getKey(["test", "key"]);
-        expect(key).toBe("test:key");
-    });
-
     it("should set a cache value", async () => {
-        const key = "test:key";
+        const key = utils.getKey(["test", "key"]);
         const data = { test: "data" };
-        await service.cacheSet(key, data).then((result) => {
+        await service.createInCache(key, data).then((result) => {
             expect(result).toBeDefined();
             expect(result.key).toBe(key);
             expect(result.data).toEqual(data);
@@ -140,10 +135,10 @@ describe("PersistenceService", () => {
     });
 
     it("should get a cache value", async () => {
-        const key = "test:key";
+        const key = utils.getKey(["test", "key"]);
         const data = { test: "data" };
-        await service.cacheSet(key, data);
-        await service.cacheGet(key).then((result) => {
+        await service.createInCache(key, data);
+        await service.findOneInCache(key).then((result) => {
             expect(result).toBeDefined();
             expect(result.key).toBe(key);
             expect(result.data).toEqual(data);

@@ -29,9 +29,8 @@ export class CachingService {
         });
     }
 
-    delete(key: string): Promise<boolean> {
-        this.cacheManager.del(key);
-        return null;
+    delete(key: string): Promise<void> {
+        return this.cacheManager.del(key);
     }
 
     flush(): Promise<void> {
