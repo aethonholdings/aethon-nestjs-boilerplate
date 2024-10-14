@@ -44,6 +44,7 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 6. [nestjs/paginate](https://www.npmjs.com/package/nestjs-paginate)
 7. [nestjs/swagger](https://docs.nestjs.com/openapi/introduction)
 10. [class-validator](https://github.com/typestack/class-validator)
+11. [redis](https://redis.io/docs/latest/develop/)
 
 ##  Features set up
 * Separate database module
@@ -51,20 +52,20 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 * Standardised responses
 * Request, response and error event logging
 * Parameter validation
-* Caching with [redis](https://redis.io/docs/latest/develop/)
+* Caching with Redis
 
 **To do**
 * api version paths
 * JWT auth
 
-## API response schema
+## Technical notes
 
+### API response schema
 All API responses conform to the `APIResponse<T>` type, whereby `<T>` is the DTO type and: 
 
 `export type APIResponse<T> = APIResponseData<T> | APIResponseError;`
 
-### Data response
-
+#### Data response
 ```
 export interface APIResponseData<T> {
   success: boolean = true                       // true for OK code
@@ -75,7 +76,7 @@ export interface APIResponseData<T> {
 }
 ```
 
-### Error Response
+#### Error Response
 ```
 export interface APIResponseError {
   success: boolean = false                      // false for true
@@ -110,5 +111,12 @@ export interface Root {
 }
 ```
 
-## Testing
+### PersistenceService and Caching
+Interactions with both the database and cache are abstracted out of the services into the `PersistenceService`.  The service then utilises the `DatabaseService` and `CachingService` to interact with these two components.  
+
+In this repo, `PersistenceService` exposes basic CRUD database methods such as `findOne()`, and similar cache interaction methods such as `findOneInCache()`. These additional logical layers are there in order to enable smoother decoupling of the caching or DB components used, giving services a single "point of contact" with the back end. The `PersistenceService` can also be utilised to enforce consistent global query caching strategies, if needed, coupling database and cache operations with specific strategies as needed.
+
+To enforce consistent key usage across all modules, the function `utils.getKey(keyBuilder: KeyBuilder): string` in `\src\common\utils\utils.ts` returns concatenated cache key strings.
+
+### Testing
 Example unit tests are included for all key components.  Run `npm run test` to run all Jest tests.
