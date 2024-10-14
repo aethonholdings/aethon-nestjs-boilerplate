@@ -9,6 +9,7 @@
         "build": "nest build",
         "build:test": "cp -rv ./env/env.test.ts ./env/env.ts && nest build",
         "build:prod": "cp -rv ./env/env.prod.ts ./env/env.ts && nest build",
+        "doc": "npx @compodoc/compodoc -p tsconfig.json -s",
         "start": "nest start",
         "start:dev": "cp -rv ./env/env.dev.ts ./env/env.ts && nest start --watch",
         "start:test": "cp -rv ./env/env.test.ts ./env/env.ts && nest start --debug --watch",
@@ -41,6 +42,7 @@
         "typeorm": "^0.3.20"
     },
     "devDependencies": {
+        "@compodoc/compodoc": "^1.1.26",
         "@nestjs/cli": "^10.0.0",
         "@nestjs/schematics": "^10.0.0",
         "@nestjs/testing": "^10.0.0",

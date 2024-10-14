@@ -1,0 +1,275 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>aethon-nestjs-boilerplate documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">aethon-nestjs-boilerplate documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<h1>aethon-nestjs-boilerplate</h1>
+<p align="center">
+  <a href="https://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+  <p align="center">A progressive <a href="https://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+<h2>Description</h2>
+<p>Aethon Holdings Nestjs REST API boilerplate</p>
+<h2>Running</h2>
+<p><code>npm install</code></p>
+<p>In <code>\env</code>, create <code>env.dev.ts</code>, <code>env.test.ts</code> and <code>env.prod.ts</code> based on provided <code>env.example.ts</code>.</p>
+<p><code>npm run start:dev</code> to run based on configuration in <code>env.dev.ts</code>.  Each of run <code>start:dev</code>, <code>start:test</code> overwrites <code>env.ts</code> with the corresponding env file,  before bootstraping NestJS, thus configuring the system.</p>
+<h2>Dependencies/ extensions included</h2>
+<ol>
+<li><a href="https://docs.nestjs.com/">NestJS</a> core</li>
+<li><a href="https://prettier.io/docs/en/">Prettier</a></li>
+<li><a href="https://jestjs.io/docs/getting-started">Jest</a></li>
+<li><a href="https://docs.nestjs.com/techniques/configuration">nestjs/config</a></li>
+<li><a href="https://typeorm.io/">TypeORM</a> + mySQL</li>
+<li><a href="https://www.npmjs.com/package/nestjs-paginate">nestjs/paginate</a></li>
+<li><a href="https://docs.nestjs.com/openapi/introduction">nestjs/swagger</a></li>
+<li><a href="https://github.com/typestack/class-validator">class-validator</a></li>
+<li><a href="https://redis.io/docs/latest/develop/">redis</a></li>
+</ol>
+<h2>Features set up</h2>
+<ul>
+<li>Separate database module</li>
+<li>Standardised CRUD template</li>
+<li>Standardised responses</li>
+<li>Request, response and error event logging</li>
+<li>Parameter validation</li>
+<li>Caching with Redis</li>
+</ul>
+<p><strong>To do</strong></p>
+<ul>
+<li>api version paths</li>
+<li>JWT auth</li>
+</ul>
+<h2>Technical notes</h2>
+<h3>API response schema</h3>
+<p>All API responses conform to the <code>APIResponse&lt;T&gt;</code> type, whereby <code>&lt;T&gt;</code> is the DTO type and: </p>
+<p><code>export type APIResponse&lt;T&gt; = APIResponseData&lt;T&gt; | APIResponseError;</code></p>
+<h4>Data response</h4>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-none">export interface APIResponseData&lt;T&gt; {
+  success: boolean = true                       // true for OK code
+  path: string                                  // the endpoint path
+  requestMethod: keyof typeof RequestMethod     // &#39;GET&#39; | &#39;POST&#39; | &#39;PUT&#39; etc.
+  paginated: boolean                            // true if response is paginated
+  payload: T | T[] | Paginate&lt;T&gt;                // DTO payload, potentially paginated 
+}</code></pre></div><h4>Error Response</h4>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-none">export interface APIResponseError {
+  success: boolean = false                      // false for true
+  path: string                                  // the endpoint path
+  requestMethod: keyof typeof RequestMethod     // &#39;GET&#39; | &#39;POST&#39; | &#39;PUT&#39; etc.
+  error: {
+    status: number                              // HTTP response code
+    message: string                             // error message
+  }
+}</code></pre></div><p>Pagination of type <code>T</code> DTOs in <code>APIResponseData&lt;T&gt;</code> is based on <a href="https://www.npmjs.com/package/nestjs-paginate"><code>nestjs/paginate</code></a> under the following interface:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-none">export interface Root {
+    data: T[]                                   // paginated DTO array
+    meta: {                                     // pagination features, based on config and query
+        itemsPerPage: number                    // standard items per page
+        totalItems: number                      // total items being paginated
+        currentPage: number                     // page offset
+        totalPages: number                      // max page count
+        sortBy: string[][]                      // [[fieldName:string, &#39;ASC&#39; | &#39;DESC&#39;]]
+        search: string                          // search across columns
+        filter: Filter                          // where query object
+    }
+    links: {
+        first: string                           // link to api call at beginning of pagination
+        previous: string                        // link to previous page
+        current: string                         // current current page api call link
+        next: string                            // link to next page
+        last: string                            // link to last page
+    }
+}</code></pre></div><h3>PersistenceService and Caching</h3>
+<p>Interactions with both the database and cache are abstracted out of the services into the <code>PersistenceService</code>.  The service then utilises the <code>DatabaseService</code> and <code>CachingService</code> to interact with these two components.</p>
+<p>In this schema, controller-related services thus are focused on implementing business logic and flow, while the <code>PersistenceService</code> offers a single entry point to persistence functionality.</p>
+<p>In this repo, <code>PersistenceService</code> exposes basic CRUD database methods such as <code>findOne()</code>, and similar cache interaction methods such as <code>findOneInCache()</code>. These additional logical layers are there in order to enable smoother decoupling of the caching or DB solutions while giving services a single &quot;point of contact&quot; with the back end. The <code>PersistenceService</code> can also be utilised to enforce consistent global query caching strategies, if needed, coupling database and cache operations with specific strategies as needed.</p>
+<p>To enforce consistent key usage across all modules, the function <code>utils.getKey(keyBuilder: KeyBuilder): string</code> in <code>\src\common\utils\utils.ts</code> returns concatenated cache key strings.</p>
+<h3>Testing</h3>
+<p>Example unit tests are included for all key components.  Run <code>npm run test</code> to run all Jest tests.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
