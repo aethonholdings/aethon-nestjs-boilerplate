@@ -8,7 +8,7 @@ export function log(event: string, message: string): string {
 export function getKey(keyBuilder: KeyBuilder): string {
     return keyBuilder.map((item) => JSON.stringify(item))
             .join(":")
-            .replace(/\r?\n|\r/g, " ")
-            .replace(/\s+/g, " ")
-            .replace(/ /g, "");
+            .replace(/\r?\n|\r/g, "")
+            .replace(/\s+/g, "")
+            .replace(/["']/g, "");
 }

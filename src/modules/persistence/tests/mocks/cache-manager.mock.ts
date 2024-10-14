@@ -1,6 +1,6 @@
 import { Cacheable } from "src/common/types/types";
 
-export class mockCacheManager {
+export class MockCacheManager {
     _data: any;
 
     constructor() {

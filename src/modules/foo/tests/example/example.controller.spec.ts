@@ -5,12 +5,15 @@ import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.
 import { exampleTestData } from "src/common/test-data/example.test-data";
 import { Example } from "src/common/classes/entities/example.entity";
 import { PersistenceService } from "src/modules/persistence/services/persistence.service";
-import * as dataSourceConfig from "../../../persistence/tests/mocks/data-source.config.mock";
-import { MockPersistenceService } from "src/modules/persistence/tests/mocks/persistence.service.mock";
+import * as databaseConfig from "../../../persistence/tests/mocks/data-source.config.mock";
+import * as cacheConfig from "../../../persistence/tests/mocks/cache.config.mock";
+import { CacheModule } from "@nestjs/cache-manager";
+import { RedisClientOptions } from "redis";
+import { DatabaseService } from "src/modules/persistence/services/database.service";
+import { CachingService } from "src/modules/persistence/services/caching.service";
 
 describe("UserController", () => {
     // configurable variables
-    const EntityType = Example;
     type ControllerType = ExampleController;
     const controllerTested = ExampleController;
     const typeOrmEntities = [Example];
@@ -21,15 +24,12 @@ describe("UserController", () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: dataSourceConfig.getImports(typeOrmEntities),
+            imports: [
+                CacheModule.register<RedisClientOptions>(cacheConfig.getConfig()),
+                ...databaseConfig.getImports(typeOrmEntities)
+            ],
             controllers: [ExampleController],
-            providers: [
-                ExampleService,
-                {
-                    provide: PersistenceService,
-                    useValue: new MockPersistenceService()
-                }
-            ]
+            providers: [ExampleService, PersistenceService, DatabaseService, CachingService]
         }).compile();
         controller = module.get<ControllerType>(controllerTested);
         testData = exampleTestData;

@@ -6,10 +6,11 @@ import { LessThan } from "typeorm";
 import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 import { CachingService } from "../../services/caching.service";
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { mockCacheManager } from "../mocks/cache-manager.mock";
+import { CacheModule } from "@nestjs/cache-manager";
 import * as databaseConfig from "../mocks/data-source.config.mock";
 import * as utils from "src/common/utils/utils";
+import * as cacheConfig from "../mocks/cache.config.mock";
+import { RedisClientOptions } from "redis";
 
 describe("PersistenceService", () => {
     let service: PersistenceService;
@@ -24,18 +25,19 @@ describe("PersistenceService", () => {
     for (const test of tests) {
         beforeEach(async () => {
             const module: TestingModule = await Test.createTestingModule({
-                imports: [...databaseConfig.getImports([test.entity])],
+                imports: [
+                    CacheModule.register<RedisClientOptions>(cacheConfig.getConfig()),
+                    ...databaseConfig.getImports([test.entity])
+                ],
                 providers: [
                     PersistenceService,
                     DatabaseService,
-                    CachingService,
-                    {
-                        provide: CACHE_MANAGER,
-                        useValue: new mockCacheManager()
-                    }
+                    CachingService
                 ]
             }).compile();
             service = module.get<PersistenceService>(PersistenceService);
+            let cachingService: CachingService = module.get<CachingService>(CachingService);
+            await cachingService.flush();
             testData = test.data;
         });
 
@@ -132,17 +134,19 @@ describe("PersistenceService", () => {
             expect(result.key).toBe(key);
             expect(result.data).toEqual(data);
         });
+        await service.deleteInCache(key);
     });
 
     it("should get a cache value", async () => {
         const key = utils.getKey(["test", "key"]);
         const data = { test: "data" };
-        await service.createInCache(key, data);
+        await service.createInCache(key, data);        
         await service.findOneInCache(key).then((result) => {
             expect(result).toBeDefined();
             expect(result.key).toBe(key);
             expect(result.data).toEqual(data);
         });
+        await service.deleteInCache(key);
     });
 
     afterEach(async () => {

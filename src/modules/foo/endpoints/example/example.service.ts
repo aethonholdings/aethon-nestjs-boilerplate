@@ -30,7 +30,7 @@ export class ExampleService {
     }
 
     async create(createDTO: ExampleCreateDTO): Promise<ExampleGetDTO> {
-        return this.persistenceService.create(ExampleGetDTO, createDTO) as Promise<ExampleGetDTO>;
+        return this.persistenceService.create(Example, createDTO) as Promise<ExampleGetDTO>;
     }
 
     async update(id: number, updateDTO: ExampleUpdateDTO): Promise<null> {

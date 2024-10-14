@@ -17,15 +17,16 @@ export class CachingService {
     set<T>(key: string, data: T, ttl?: number): Promise<Cacheable<T>> {
         const timestamp: number = Date.now();
         const ttlTarget: number = ttl || this._defaultTtl;
-        return this.cacheManager.set(key, data, ttl).then((result) => {
-            return {
-                key: key,
-                start: timestamp,
-                end: timestamp + ttlTarget,
-                ttl: ttlTarget,
-                cached: false,
-                data: data
-            };
+        const cacheable: Cacheable<T> = {
+            key: key,
+            start: timestamp,
+            end: timestamp + ttlTarget,
+            ttl: ttlTarget,
+            cached: true,
+            data: data
+        };
+        return this.cacheManager.set(key, cacheable, ttl).then(() => {
+            return cacheable;
         });
     }
 
