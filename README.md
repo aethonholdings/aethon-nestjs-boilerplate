@@ -35,6 +35,8 @@ In `\env`, create `env.dev.ts`, `env.test.ts` and `env.prod.ts` based on provide
 
 `npm run start:dev` to run based on configuration in `env.dev.ts`.  Each of run `start:dev`, `start:test` overwrites `env.ts` with the corresponding env file,  before bootstraping NestJS, thus configuring the system.
 
+Check the `http://localhost:3000/api/v0.1/swagger` for the Swagger endpoint.
+
 ## Dependencies/ extensions included
 1. [NestJS](https://docs.nestjs.com/) core
 2. [Prettier](https://prettier.io/docs/en/)
