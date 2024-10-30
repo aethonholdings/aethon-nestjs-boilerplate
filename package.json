@@ -20,7 +20,7 @@
         "test:debug": "cp -rv ./env/env.dev.ts ./env/env.ts && node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "cp -rv ./env/env.dev.ts ./env/env.ts && jest --config ./test/jest-e2e.json",
         "lint": "eslint '{src,apps,libs,test}/**/*.ts' --fix",
-        "prettier": "prettier --write 'src/**/*.ts' 'env/**/*.ts'"
+        "format": "prettier --write 'src/**/*.ts' 'env/**/*.ts'"
     },
     "dependencies": {
         "@nestjs/cache-manager": "^2.2.2",

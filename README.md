@@ -56,7 +56,7 @@ Check the `http://localhost:3000/api/v0.1/swagger` for the Swagger endpoint.
 * Request, response and error event logging
 * Parameter validation
 * Caching with Redis
-* api version paths
+* API version paths
 
 **To do**
 * JWT auth
