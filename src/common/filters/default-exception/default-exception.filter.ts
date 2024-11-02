@@ -20,7 +20,7 @@ export class DefaultExceptionFilter implements ExceptionFilter {
 
         if (exception instanceof HttpException) {
             // if the exception is an instance of HttpException, we can get the status and message from it
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            status = exception.getStatus();
             message = exception.message;
         } else {
             // if the exception is not an instance of HttpException, we need to handle it
