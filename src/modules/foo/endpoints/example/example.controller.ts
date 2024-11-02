@@ -3,7 +3,7 @@ import { ExampleService } from "./example.service";
 import { ExampleGetDTO } from "src/common/classes/dto/example/example.get.dto";
 import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
 import { ExampleUpdateDTO } from "src/common/classes/dto/example/example.update.dto";
-import { GetPaginator, Paginated, Paginator } from "aethon-nestjs-paginate";
+import { GetPaginator, Paginated, PaginateQuery, Paginator } from "aethon-nestjs-paginate";
 import { ApiBody, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { examplePaginateConfig } from "./example.paginate-config";
 
@@ -17,7 +17,7 @@ export class ExampleController {
     @Get()
     @ApiQuery({
         name: "paginateQuery",
-        type: Paginator,
+        type: PaginateQuery,
         required: false,
         description: "The pagination query parameters."
     })
