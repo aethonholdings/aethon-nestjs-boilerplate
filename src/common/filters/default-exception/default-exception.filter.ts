@@ -17,6 +17,9 @@ export class DefaultExceptionFilter implements ExceptionFilter {
         const request: RequestWithMeta = httpHost.getRequest();
         let status: number;
         let message: string;
+        const requestId: string = request?.meta && request.meta?.id ? request.meta.id : "Not applicable";
+        const responseTimeMs: number =
+            request?.meta && request.meta?.startTimeStamp ? Date.now() - request.meta.startTimeStamp : -1;
 
         if (exception instanceof HttpException) {
             // if the exception is an instance of HttpException, we can get the status and message from it
@@ -40,15 +43,13 @@ export class DefaultExceptionFilter implements ExceptionFilter {
             exception = new HttpException(message, status);
         }
         status === HttpStatus.INTERNAL_SERVER_ERROR
-            ? this._logger.error(
-                  log("Error response", `(${status}) ${exception.message} - Request ID: ${request.meta.id}`)
-              )
+            ? this._logger.error(log("Error response", `(${status}) ${exception.message} - Request ID: ${requestId}`))
             : this._logger.verbose(
-                  log("Error response", `(${status}) ${exception.message} - Request ID: ${request.meta.id}`)
+                  log("Error response", `(${status}) ${exception.message} - Request ID: ${requestId}`)
               );
         response.status(status).json({
-            requestId: request?.meta.id || "No request ID found",
-            responseTimeMs: (request?.meta.startTimeStamp)? Date.now() - request.meta.startTimeStamp : -1,
+            requestId: requestId,
+            responseTimeMs: responseTimeMs,
             success: false,
             path: request.url,
             requestMethod: request.method,
