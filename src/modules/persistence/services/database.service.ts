@@ -21,9 +21,9 @@ export class DatabaseService {
         return repository.findBy(options);
     }
 
-    findAllPaginated<T extends ObjectLiteral>(entity: EntityTarget<T>, paginator: Paginator): Promise<Paginated<ObjectLiteral>> {
+    findAllPaginated(entity: EntityTarget<ObjectLiteral>, paginator: Paginator): Promise<Paginated<ObjectLiteral>> {
         const repository = this.dataSource.getRepository(entity);
-        return paginator.run<T>(repository);
+        return paginator.run(repository);
     }
 
     findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {
