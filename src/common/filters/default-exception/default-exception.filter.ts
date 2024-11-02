@@ -47,8 +47,8 @@ export class DefaultExceptionFilter implements ExceptionFilter {
                   log("Error response", `(${status}) ${exception.message} - Request ID: ${request.meta.id}`)
               );
         response.status(status).json({
-            requestId: request.meta.id,
-            responseTimeMs: Date.now() - request.meta.startTimeStamp,
+            requestId: request?.meta.id || "No request ID found",
+            responseTimeMs: (request?.meta.startTimeStamp)? Date.now() - request.meta.startTimeStamp : -1,
             success: false,
             path: request.url,
             requestMethod: request.method,

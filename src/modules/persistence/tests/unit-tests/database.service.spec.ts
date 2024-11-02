@@ -2,9 +2,11 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { DatabaseService } from "../../services/database.service";
 import { DataSource } from "typeorm";
 import { Example } from "src/common/classes/entities/example.entity";
-import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
+import { exampleTestData } from "src/common/test-data/example.test-data";
 import * as databaseConfig from "../mocks/data-source.config.mock";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
+import { Paginator } from "aethon-nestjs-paginate";
+import { examplePaginateConfig } from "src/modules/foo/endpoints/example/example.paginate-config";
 
 describe("DatabaseService", () => {
     let service: DatabaseService;
@@ -66,7 +68,7 @@ describe("DatabaseService", () => {
                 })
             );
             created = created.sort((a, b) => a.id - b.id);
-            await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
+            await service.findAllPaginated(test.entity, new Paginator(examplePaginateConfig, {}, "http://foo/")).then((results) => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
                 results.data = JSON.parse(JSON.stringify(results.data));

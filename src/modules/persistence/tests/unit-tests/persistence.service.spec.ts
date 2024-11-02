@@ -3,7 +3,7 @@ import { PersistenceService } from "../../services/persistence.service";
 import { DatabaseService } from "../../services/database.service";
 import { Example } from "src/common/classes/entities/example.entity";
 import { LessThan } from "typeorm";
-import { exampleTestData, paginateConfig } from "src/common/test-data/example.test-data";
+import { exampleTestData } from "src/common/test-data/example.test-data";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 import { CachingService } from "../../services/caching.service";
 import { CacheModule } from "@nestjs/cache-manager";
@@ -11,6 +11,8 @@ import * as databaseConfig from "../mocks/data-source.config.mock";
 import * as utils from "src/common/utils/utils";
 import * as cacheConfig from "../mocks/cache.config.mock";
 import { RedisClientOptions } from "redis";
+import { Paginator } from "aethon-nestjs-paginate";
+import { examplePaginateConfig } from "src/modules/foo/endpoints/example/example.paginate-config";
 
 describe("PersistenceService", () => {
     let service: PersistenceService;
@@ -78,7 +80,7 @@ describe("PersistenceService", () => {
             );
             created = created.sort((a, b) => a.id - b.id);
 
-            await service.findAllPaginated(test.entity, { path: "test" }, paginateConfig).then((results) => {
+            await service.findAllPaginated(test.entity, new Paginator(examplePaginateConfig, {}, "http://foo/")).then((results) => {
                 expect(results).toBeDefined();
                 expect(results.data).toBeDefined();
                 results.data = JSON.parse(JSON.stringify(results.data));

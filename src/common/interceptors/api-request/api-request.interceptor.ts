@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from "@nestjs/common";
 import { APIResponseData } from "aethon-api-types";
-import { Paginated } from "nestjs-paginate";            /// THIS NEEDS TO BE REPLACED WITH AETHON
+import { Paginated } from "aethon-nestjs-paginate";            /// THIS NEEDS TO BE REPLACED WITH AETHON
 import { map, Observable } from "rxjs";
 import { RequestWithMeta } from "src/common/types/types";
 import { log } from "src/common/utils/utils";

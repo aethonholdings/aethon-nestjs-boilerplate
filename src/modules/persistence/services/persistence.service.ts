@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
 import { EntityTarget, FindOneOptions, ObjectLiteral, SelectQueryBuilder } from "typeorm";
 import { DatabaseService } from "./database.service";
 import { CachingService } from "./caching.service";
 import { Cacheable, CacheStrategyOptions } from "src/common/types/types";
 import * as utils from "src/common/utils/utils";
+import { Paginated, Paginator } from "aethon-nestjs-paginate";
 
 @Injectable()
 export class PersistenceService {
@@ -19,10 +19,9 @@ export class PersistenceService {
 
     findAllPaginated<T>(
         entity: EntityTarget<ObjectLiteral>,
-        query: PaginateQuery,
-        paginateConfig: PaginateConfig<T>
+        paginator: Paginator
     ): Promise<Paginated<ObjectLiteral>> {
-        return this.databaseService.findAllPaginated(entity, query, paginateConfig);
+        return this.databaseService.findAllPaginated(entity, paginator);
     }
 
     findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {

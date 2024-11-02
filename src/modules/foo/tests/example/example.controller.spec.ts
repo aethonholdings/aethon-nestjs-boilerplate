@@ -11,6 +11,8 @@ import { CacheModule } from "@nestjs/cache-manager";
 import { RedisClientOptions } from "redis";
 import { DatabaseService } from "src/modules/persistence/services/database.service";
 import { CachingService } from "src/modules/persistence/services/caching.service";
+import { Paginator } from "aethon-nestjs-paginate";
+import { examplePaginateConfig } from "../../endpoints/example/example.paginate-config";
 
 describe("UserController", () => {
     // configurable variables
@@ -63,7 +65,7 @@ describe("UserController", () => {
             })
         );
         created = created.sort((a, b) => a.id - b.id);
-        await controller.findAll({ path: "test" }).then((results) => {
+        await controller.findAll(new Paginator(examplePaginateConfig, {}, "http://foo/")).then((results) => {
             results = JSON.parse(JSON.stringify(results));
             results.data = results.data.sort((a, b) => a.id - b.id);
             expect(results.data).toEqual(created);

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { paginate, PaginateConfig, Paginated, PaginateQuery } from "nestjs-paginate";
+import { Paginated, Paginator } from "aethon-nestjs-paginate";
 import {
     DataSource,
     DeleteResult,
@@ -8,7 +8,8 @@ import {
     ObjectLiteral,
     EntityTarget,
     FindOptions,
-    SelectQueryBuilder
+    SelectQueryBuilder,
+    Repository
 } from "typeorm";
 
 @Injectable()
@@ -20,13 +21,9 @@ export class DatabaseService {
         return repository.findBy(options);
     }
 
-    findAllPaginated<T>(
-        entity: EntityTarget<ObjectLiteral>,
-        query: PaginateQuery,
-        paginateConfig: PaginateConfig<T>
-    ): Promise<Paginated<ObjectLiteral>> {
+    findAllPaginated<T extends ObjectLiteral>(entity: EntityTarget<T>, paginator: Paginator): Promise<Paginated<ObjectLiteral>> {
         const repository = this.dataSource.getRepository(entity);
-        return paginate(query, repository, paginateConfig);
+        return paginator.run<T>(repository);
     }
 
     findOne(entity: EntityTarget<ObjectLiteral>, options: FindOneOptions): Promise<ObjectLiteral> {

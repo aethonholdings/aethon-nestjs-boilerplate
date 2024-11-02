@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { ExampleService, paginateConfig } from "./example.service";
+import { ExampleService } from "./example.service";
 import { ExampleGetDTO } from "src/common/classes/dto/example/example.get.dto";
 import { ExampleCreateDTO } from "src/common/classes/dto/example/example.create.dto";
 import { ExampleUpdateDTO } from "src/common/classes/dto/example/example.update.dto";
-import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate, Paginated, PaginateQuery } from "nestjs-paginate";
-import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
+import { GetPaginator, Paginated, Paginator } from "aethon-nestjs-paginate";
+import { ApiBody, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { examplePaginateConfig } from "./example.paginate-config";
 
 const path = "example";
 
@@ -14,11 +15,15 @@ export class ExampleController {
     constructor(private exampleService: ExampleService) {}
 
     @Get()
-    @ApiPaginationQuery(paginateConfig)
-    @ApiOkPaginatedResponse(ExampleGetDTO, paginateConfig)
+    @ApiQuery({
+        name: "paginateQuery",
+        type: Paginator,
+        required: false,
+        description: "The pagination query parameters."
+    })
     @ApiOkResponse({ description: "Returns a paginated list of example class entities." })
-    findAll(@Paginate() query: PaginateQuery): Promise<Paginated<ExampleGetDTO>> {
-        return this.exampleService.findAll(query);
+    findAll(@GetPaginator(examplePaginateConfig) paginator: Paginator): Promise<Paginated<ExampleGetDTO>> {
+        return this.exampleService.findAll(paginator);
     }
 
     @Get(":id")

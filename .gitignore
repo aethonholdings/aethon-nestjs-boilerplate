@@ -68,3 +68,7 @@ package-lock.json
 
 # redis dump file
 *.rdb
+
+# yalc
+.yalc/
+yalc.lock
