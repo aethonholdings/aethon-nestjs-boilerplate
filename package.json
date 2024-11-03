@@ -30,7 +30,7 @@
         "@nestjs/platform-express": "^10.0.0",
         "@nestjs/swagger": "^7.4.2",
         "@nestjs/typeorm": "^10.0.2",
-        "aethon-api-types": "^0.0.2",
+        "aethon-api-types": "^0.0.3",
         "aethon-nestjs-paginate": "^0.0.3",
         "cache-manager": "^5.7.6",
         "cache-manager-redis-store": "^3.0.1",
